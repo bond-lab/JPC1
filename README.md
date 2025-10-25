@@ -19,7 +19,10 @@ Read:
  * visualize
  * compare to corpus
  * look at sentiment
-
+ * Look for errors
+   * find exceptions to patterns
+   * evaluate and fix
+   * mainly direction, but can be type
 
 ### Lexical Conceptual Mapping
  * map metaphor pairs to hypernyms
@@ -29,11 +32,6 @@ Read:
  * try to map
    * try to generate labels for new ones
 
-### Look for errors
- * find exceptions to patterns
- * evaluate and fix
- * mainly direction, but can be type
- 
 ### Compare and contrast with UniMet
  * see where we differ and why
  * evaluate
@@ -46,8 +44,6 @@ Read:
    * hand annotate a subset to see what we are missing
    * look at other approaches
  * see what her have in other data sets (like MetaNet)
-
-
 
 
 ### Look at xlingual morphological patterns
@@ -66,12 +62,15 @@ Read:
  * also at lexical-conceptual mapping
 
 
+### Parse DBnary
+ * try to find hyponyms
+ * try to match trope classes
+
+
+
+
 ### Extend wordnet with DBnary
  * https://kaiko.getalp.org/about-dbnary/
  * read data (with RDF lib) 
  * attempt to map to wordnet synsets
  * use definition, use translations
-
-### Parse DBnary
- * try to find hyponyms
- * try to match trope classes
