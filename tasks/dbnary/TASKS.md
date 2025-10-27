@@ -9,3 +9,9 @@
    * download data
    * read data (with RDF lib) 
    
+
+OR
+
+# try to match DBNary to wordnet (I would like this)
+
+* get this working again: https://github.com/bond-lab/synset-align
