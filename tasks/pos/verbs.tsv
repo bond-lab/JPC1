@@ -1,0 +1,28 @@
+act	02372362	0	act	soc	2357	12976 - 10619
+ interact	02382049 	1	int	soc	 130	 1353 - 1223
+ communicate	   00742582	2	com	com	1097
+ handle	02519853	2	han	chn	 126
+ move	 01835473	1	mov	mot	 336
+ travel	   01839438	1	trv	mot	 751
+ learn	   00600349	1	lrn	cog	 204
+ think	    00630153	1	thk	cog	 721
+ change-vi	00109468	1	chg	chn	1441
+ remove	   00173351	1	rmv	chn	 201
+ touch	   01208838	1	tch	cnt	 197
+ cover	   01335412	1	cov	cnt	 189
+ connect	   01357376	1	con	cnt	 267
+ induce	   00772482	1	ind	com	 193	4717 - 4524
+ create	   01620211	2	cre	crt	 754
+ modify   	   00126072	2	mod	chn	1779	3770 - 1991
+  displace	   01854282	3	dpl	chn	1242
+  affect	   00137133	3	aff	chn	 151
+  improve	   00206293	3	imp	chn	 129
+  transfer	   02225243	3	tra	chm	 469
+ get	   02215637	1	get	pos	 242
+happen	   00340744	0	hap	chn
+exist	02609706 	0	xst	stv,pcp
+have	   02208144	0	pos	pos
+know	00596016	0	kno	cog
+relate	02681865	0	rel	sta
+lack	   02638434	0	lck	sta
+be	02610777 	0	cop	sta,bod

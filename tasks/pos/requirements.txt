@@ -1,0 +1,6 @@
+pydelphin
+wn
+networkx
+matplotlib
+toml
+pygraphviz

@@ -1,0 +1,33 @@
+substance	00020270	2	sub
+food	00021445	3	fod
+body part	05227735	4	bod
+object	00002684	2	obj
+location	00027365	3	loc
+artifact	00022119	4	art
+living thing	00004258	4	liv
+living thing	00004475	5	liv
+person	00007846	6	per
+person	09786620	3	per
+person	10398111	3	per
+animal	00015568	6	anm
+plant	00017402	6	pln
+cause	00007347	2	cau
+matter	00021007	2	mat
+process	00029976	2	prc
+phenomenon	00034512	3	phn
+abstract ent	00002137	1	abs
+cognition	00023451	3	cog
+feeling	05730374	6	flg
+motivation	00023953	3	mtv
+attribute	00024444	2	att
+shape	05071206	5	shp
+state	00024900	3	stt
+time	00028468	3	tim
+event	00029677	2	evt
+act	00030657	3	act
+group	00031563	2	grp
+relation	00032220	2	rln
+possession	00032912	3	pos
+communication	00033319	2	com
+quantity	00033914	2	qnt
+thing	00001740	0	thg
