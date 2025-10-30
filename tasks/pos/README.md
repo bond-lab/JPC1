@@ -11,3 +11,5 @@ I added some code to find supertypes, this is useful for this task and lcmap (an
 
 * note that  `find_topic.py` also has code to show the top hierarchy graphically, you can not call it if you don't need it.  It makes two diagrams for verbs and nouns
   * `Top nodes for v.png` and `Top nodes for n.png`
+
+There is some documentation for topics: https://omwn.org/doc/topics.html
