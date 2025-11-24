@@ -13,3 +13,7 @@ I added some code to find supertypes, this is useful for this task and lcmap (an
   * `Top nodes for v.png` and `Top nodes for n.png`
 
 There is some documentation for topics: https://omwn.org/doc/topics.html
+
+
+You can find some data here:
+https://aclanthology.org/2024.acl-long.249.pdf
