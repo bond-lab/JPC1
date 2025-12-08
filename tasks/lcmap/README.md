@@ -8,17 +8,18 @@ def extract_metaphor_mappings(pdf_path):
     # This is a heuristic; MetaNet papers often list them explicitly in tables or capitalized text.
     metaphor_pattern = re.compile(r'\b([A-Z]+)\s+(?:IS|ARE)\s+([A-Z]+)\b')
 
-    try:
+   try:
         with pdfplumber.open(pdf_path) as pdf:
             print(f"Analyzing {pdf_path} with {len(pdf.pages)} pages...")
             
-            for page_num, page in enumerate(pdf.pages):
+for page_num, page in enumerate(pdf.pages):
                 text = page.extract_text()
                 if not text:
                     continue
-                
-                # 1. Search for Capitalized Metaphor Mappings (e.g., POVERTY IS A DISEASE)
-                matches = metaphor_pattern.findall(text)
+
+
+# 1. Search for Capitalized Metaphor Mappings (e.g., POVERTY IS A DISEASE)
+matches = metaphor_pattern.findall(text)
                 for source, target in matches:
                     # Filter out noise (short words)
                     if len(source) > 3 and len(target) > 3:
@@ -29,9 +30,9 @@ def extract_metaphor_mappings(pdf_path):
                             "Page": page_num + 1
                         })
 
-                # 2. Look for explicit mentions of "Source Domain" and "Target Domain"
-                # (Simple text scraping for proximity)
-                if "Source Domain" in text and "Target Domain" in text:
+# 2. Look for explicit mentions of "Source Domain" and "Target Domain
+# (Simple text scraping for proximity)
+if "Source Domain" in text and "Target Domain" in text:
                     # Extract lines that might contain the mapping
                     lines = text.split('\n')
                     for line in lines:
@@ -41,8 +42,9 @@ def extract_metaphor_mappings(pdf_path):
                                 "Context": "Explicit Mapping Description",
                                 "Page": page_num + 1
                             })
-
-    except Exception as e:
+                            
+                            
+except Exception as e:
         print(f"Error processing PDF: {e}")
         return []
 
