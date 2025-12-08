@@ -58,7 +58,9 @@ import re
 
 
 
-    # Note on PDF Extraction: In the MetaNet papers, mappings are often discussed in the body text or shown in figures (like Figure 1 in W15-1405). Automated extraction works best on the capitalized conventions (e.g., "LOVE IS A JOURNEY"). For the most accurate data, parsing the OWL/RDF data (as shown in the previous turn) is preferred over PDF scraping because the PDF representation is unstructured.
+    # Note on PDF Extraction: In the MetaNet papers, mappings are often discussed in the body text or shown in figures (like Figure 1 in W15-1405). Automated extraction works best on the capitalized conventions (e.g., "LOVE IS A JOURNEY"). 
+    For the most accurate data, parsing the OWL/RDF data (as shown in the previous turn) is preferred over PDF scraping because the PDF representation is unstructured.
+
 
 https://docs.google.com/spreadsheets/d/1DIy7qy0Elw3JL2SuDhoQJNvw9WOoraMgh2hNWqcufuU/edit?usp=sharing
 
