@@ -10,6 +10,23 @@ Read:
  * [Metonymy is more multilingual than metaphor: Analysing tropes using ChainNet and the Open Multilingual Wordnet](https://github.com/unipv-larl/GWC2025/releases/download/papers/GWC2025_paper_36.pdf)  (Bond and Maudslay, GWC 2025)
 
 
+## Who is doing what
+
+
+* LCM and patterns
+  * Barbora Mahdalová - bmahdalova - Look at xlingual morphological patterns
+  * Dominik Fránek - dfranek161 - Look at xlingual morphological patterns
+* Different POS
+  * Jakub Pokorný - Extend to different POS
+  * Nikola Zdařilová ---   --- Extend to different POS
+* Contrast to Unimet
+  * Aneta Zatloukalová- anetazatloukalovaa --- Compare and contrast with UniMet
+  * Bára Havlíčková- barahavlis - Compare and contrast with UniMet
+* Lexical Conceptual Mapping
+  * Vojtěch Mahdal - Vmahdal - lexical conceptual mapping
+  * Lea Karolína KOMÁRKOVÁ.
+* Wordnet
+  * Francis BOnd - fcbond - investigate the behaviour of metaphors at scale.
 
 ## Tasks
 

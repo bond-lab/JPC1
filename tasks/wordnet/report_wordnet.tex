@@ -1,0 +1,118 @@
+\documentclass[12pt,a4paper]{article}
+
+\title{JPC1: Metaphor and Metonymy in English, explored through ChainNet and Wordnet}
+\author{Francis Bond \\
+  \href{mailto:bond@ieee.org}{bond@ieee.org}}
+
+%%% links
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true]{hyperref}
+\hypersetup{
+  citecolor=OliveGreen, % a very dark green
+  linkcolor=NavyBlue,
+  urlcolor=NavyBlue
+}
+\usepackage{url}
+%%% references
+\usepackage{natbib}
+%\usepackage[natbibapa]{apacite}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+
+I look at the tropes (metaphors and metonyms) identified in ChainNet \citep{maudslay-etal-2024-chainnet-structured}, and use wordnet to tell us something more about them.
+
+\section{Background}
+\label{sec:background}
+
+We will use wordnet to quantitatively test some of the hypothesis about Metaphor and Metonymy.
+
+\subsection*{Resources}
+\label{sec:resources}
+
+Chainnet, Princeton Wordnet 3.0 \citep{_Fellbaum:1998}, python wn module \citep{Goodman:Bond:2021}.
+
+\section{Approach}
+\label{sec:approach}
+
+For every trope, we look at either the src and target nodes, or some difference between them.  The code is in \texttt{analyse-tropes.py}
+
+For the nodes we look at:
+\begin{itemize}
+\item Depth (distance to root)
+\item Synonymy density (number of synonyms)
+\item Abstractness%\marginpar{ToDo}
+\item Specificity\marginpar{ToDo}
+\item Topic (lexicographer file)
+\end{itemize}
+
+Depth is just the maximum depth from the root (\texttt{synset.min\_depth()}).  Synonymy density is the number of synonyms the concept has (\texttt{len(ss1.lemmas())}).  Topic is the lexicographer file.  Abstractness is calculated as suggested by \citet{Mensa:Porporato:Radicioni:2018} 0 if the synset is a hyponym of \textit{\textbf{physical entity}}, 1 otherwise.
+
+We should also calculate inclusiveness \citep[p 719]{Iliev:Axelrod:2017}.
+This is defined as: if a concept $c$ has $n$ descendents (both direct
+and indirect) in a tree that has a total of $N$ nodes, then:
+\begin{equation}
+\textnormal{inclusiveness} (c) = −log ((n+1)/N)  
+\end{equation}
+
+
+
+
+For the differences we look at:
+\begin{itemize}
+\item Distance between nodes (path)
+%\item Distance between nodes (information)
+\item Difference in depth between nodes
+\end{itemize}
+
+
+
+\section{Results}
+\label{sec:results}
+
+\input{build/summary_tables.tex}
+
+
+\begin{figure}
+  \centering
+
+  \includegraphics{build/path_distance_comparison_errorbar.png}
+  \caption{Depth Distance Comparison}
+  \label{fig:depth}
+\end{figure}
+
+ToDo: Decide which to use
+
+\includegraphics[width=\textwidth]{build/metaphor_topic_heatmap.png}
+\includegraphics[width=\textwidth]{build/metonym_topic_heatmap.png}
+\includegraphics[width=\textwidth]{build/synonyms_comparison.png}
+\includegraphics[width=\textwidth]{build/depth_comparison_errorbar.png}
+\includegraphics[width=\textwidth]{build/path_distance_comparison_errorbar.png}
+\includegraphics[width=\textwidth]{build/depth_comparison.png}
+\includegraphics[width=\textwidth]{build/path_distance_comparison.png}
+
+\section{Discussion}
+\label{sec:discussion}
+
+Path depth is as expected, Abstractness less change then expected.\marginpar{Expand!}
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+ToDo
+
+
+
+\bibliographystyle{apalike}
+%\bibliography{abb,mtg,nlp,ling,local}
+\bibliography{local}
+
+
+
+\end{document}

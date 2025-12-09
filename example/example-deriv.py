@@ -55,6 +55,12 @@ def read_data(data_dir, wn):
         tropes.add(('metonym', w, skey[fr_s], skey[to_s]))
     return tropes   
 
+def analyze_tropes(wn, tropes):
+    ""
+    loop through the tropes
+    
+
+
 
 if __name__ == "__main__":
 ##
