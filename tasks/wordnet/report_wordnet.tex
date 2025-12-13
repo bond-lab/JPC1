@@ -19,6 +19,7 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 
+\newcommand{\lnk}[1]{\textbf{\texttt{#1}}}
 
 \begin{document}
 \maketitle
@@ -28,27 +29,63 @@
 
 I look at the tropes (metaphors and metonyms) identified in ChainNet \citep{maudslay-etal-2024-chainnet-structured}, and use wordnet to tell us something more about them.
 
+The original discussion asked for some different tasks:
+
+\begin{itemize}
+\item  import chainnet to (English) wordnet
+\item  project to other languages
+\item  visualise
+  \\   I have some rough code (chainnet-viz) that I will share
+\item  compare to corpus
+\item  look at sentiment
+\item  look for errors
+  \begin{itemize} 
+  \item  find exceptions to patterns
+  \item  evaluate and fix
+  \item  mainly direction, but can be type
+  \end{itemize}
+\end{itemize}
+
+But I decided to go in a different direction, as there were some unexpected difficulties in importing chainnet into wordnet (the \texttt{wn} module did not yet support the \lnk{metaphor} and \lnk{metonym} links, neither did the wn-edit module).
+
 \section{Background}
 \label{sec:background}
 
 We will use wordnet to quantitatively test some of the hypothesis about Metaphor and Metonymy.
+Metaphor and metonymy are treated in cognitive linguistics as conceptual mechanisms, not merely stylistic devices \citep[Ch 12]{Kovecses2010Metaphor}. In Kövecses’ framework, metaphor involves understanding one conceptual domain in terms of another, typically mapping structure from a more concrete source domain onto a more abstract target domain. These mappings are partial and systematic, highlighting selected aspects of the target and motivating families of related linguistic expressions (e.g. TIME IS MONEY, ARGUMENT IS WAR). The primary cognitive function of metaphor is thus conceptualization, providing structured ways of reasoning about abstract experience.
+
+By contrast, metonymy operates within a single conceptual domain or idealized cognitive model, where one entity provides mental access to another via relations of contiguity or functional association rather than similarity \citep{Kovecses2010Metaphor}. Typical metonymic relations include \lnk{part–whole}, \lnk{producer–product}, \lnk{place–institution}, and \lnk{container–contained} (e.g. \texttt{the White House announced}, \texttt{drink a glass}). Metonymy primarily serves referential and attentional functions, enabling efficient access to salient aspects of a conceptual structure without invoking cross-domain analogy.
+
+
+The crucial distinction in Kövecses’ account therefore lies in both conceptual scope and function: metaphor involves \emph{cross-domain mappings} for understanding, while metonymy involves \emph{within-domain mappings} for reference. Although the two frequently interact in natural language, maintaining this distinction is essential for analyzing systematic patterns of meaning extension and lexical polysemy.   Metaphor involves two concepts distant in our conceptual system, while metonymy relates two elements closely related to each other in the concept space  \citep[p370]{Kovecses2010Metaphor}.
+
 
 \subsection*{Resources}
 \label{sec:resources}
 
-Chainnet, Princeton Wordnet 3.0 \citep{_Fellbaum:1998}, python wn module \citep{Goodman:Bond:2021}.
+ChainNet is a structured lexical resource that explicitly models metaphorical and metonymic sense extensions within WordNet \citep{maudslay-etal-2024-chainnet-structured}. It annotates senses in Princeton WordNet 3.0 with typed relations that capture systematic patterns of semantic extension, allowing metaphor and metonymy to be analyzed as graph-structured phenomena rather than isolated examples. By linking related senses into chains, ChainNet enables both qualitative linguistic analysis and quantitative investigation of the structural properties of meaning extension, including cross-linguistic comparison when combined with multilingual WordNet resources.
+
+Princeton WordNet 3.0 is a large, manually curated lexical database of English in which words are grouped into synsets representing distinct concepts and interconnected by typed semantic relations such as hypernymy, meronymy, and antonymy \citep{_Fellbaum:1998}. It provides a widely adopted conceptual backbone for lexical semantics, serving as the reference ontology for numerous NLP applications and as the foundation for many multilingual WordNets. In this work, WordNet 3.0 functions as the base semantic network over which metaphorical and metonymic extensions are modeled.
+
+The wn Python module is a modern, extensible interface for working programmatically with WordNet data and related lexical resources \citep{Goodman:Bond:2021}. It provides unified access to multiple WordNet versions and languages, supports querying of synsets, senses, and semantic relations, and allows users to integrate external annotations and extensions. Its design facilitates reproducible experimentation and large-scale analysis, making it well suited for computational studies of lexical semantics and for integrating resources such as ChainNet into broader processing pipelines.
+
 
 \section{Approach}
 \label{sec:approach}
 
-For every trope, we look at either the src and target nodes, or some difference between them.  The code is in \texttt{analyse-tropes.py}
+For every trope, we look at either the src and target nodes, or some difference between them.  The code is in
+\texttt{analyse-tropes.py}
+
+In order to test whether metaphor (and metonymy) typically map from a more concrete source to a more abstract target, we investigate three measures of abstractness (Depth, Abstractness and Synonym Density),  defined below.
+
+In order to test if metaphors are more likely to cross domains, we look at the topic.  We use the path distance in the wordnet graph to measure distance between source and target.  We also investigate the difference in depth between source and target.
 
 For the nodes we look at:
 \begin{itemize}
 \item Depth (distance to root)
+\item Abstractness %\marginpar{ToDo}
+\item Inclusiveness\marginpar{ToDo}
 \item Synonymy density (number of synonyms)
-\item Abstractness%\marginpar{ToDo}
-\item Specificity\marginpar{ToDo}
 \item Topic (lexicographer file)
 \end{itemize}
 
@@ -61,16 +98,16 @@ and indirect) in a tree that has a total of $N$ nodes, then:
 \textnormal{inclusiveness} (c) = −log ((n+1)/N)  
 \end{equation}
 
-
-
-
 For the differences we look at:
 \begin{itemize}
-\item Distance between nodes (path)
+\item Distance between nodes (\texttt{path\_distance})
 %\item Distance between nodes (information)
-\item Difference in depth between nodes
+\item Difference in depth between nodes  (source depth - target depth)
 \end{itemize}
 
+These are calculated for each node or pair of nodes, as appropriate.
+
+Between tropes (Metaphor vs Metonymy) we measure for significance using the Mann-Whitney U test. It tests whether values from one group tend to be larger or smaller than values from the other group.  Within trope (source vs target) we use Wilcoxon signed-rank tests.  It compares paired observations (which are statistically dependent), testing whether the median difference between paired values is zero.
 
 
 \section{Results}
@@ -79,34 +116,58 @@ For the differences we look at:
 \input{build/summary_tables.tex}
 
 
-\begin{figure}
-  \centering
+% ToDo: Decide which to use
 
-  \includegraphics{build/path_distance_comparison_errorbar.png}
-  \caption{Depth Distance Comparison}
-  \label{fig:depth}
-\end{figure}
-
-ToDo: Decide which to use
-
-\includegraphics[width=\textwidth]{build/metaphor_topic_heatmap.png}
-\includegraphics[width=\textwidth]{build/metonym_topic_heatmap.png}
-\includegraphics[width=\textwidth]{build/synonyms_comparison.png}
-\includegraphics[width=\textwidth]{build/depth_comparison_errorbar.png}
-\includegraphics[width=\textwidth]{build/path_distance_comparison_errorbar.png}
-\includegraphics[width=\textwidth]{build/depth_comparison.png}
-\includegraphics[width=\textwidth]{build/path_distance_comparison.png}
+% % \includegraphics[width=\textwidth]{build/synonyms_comparison.png}
+% \includegraphics[width=\textwidth]{build/depth_comparison_errorbar.png}
+% \includegraphics[width=\textwidth]{build/path_distance_comparison_errorbar.png}
+% \includegraphics[width=\textwidth]{build/depth_comparison.png}
+% \includegraphics[width=\textwidth]{build/path_distance_comparison.png}
 
 \section{Discussion}
 \label{sec:discussion}
 
-Path depth is as expected, Abstractness less change then expected.\marginpar{Expand!}
+Comparing Metaphor and Metonymy, we see small but signifigant differences in the abstractness of the source (where the source of metapors is less abstract (more concrete) than the source of metonyms), shown in Figure~\ref{fig:abstract}.   A similar difference is found between the length of the path between the source and target  and in the distance between them (Figure~\ref{fig:depth}), as predicted by Kövecses.
+
+\begin{figure}
+  \centering
+  \includegraphics{build/path_distance_comparison_errorbar.png}
+  \caption{Path Distance Comparison}
+  \label{fig:depth}
+\end{figure}
+
+\begin{figure}
+  \centering
+\includegraphics[width=\textwidth]{build/abstract_comparison_errorbar.png}  
+  \caption{Abstractness Distance Comparison}
+  \label{fig:abstract}
+\end{figure}
+
+There are also significant differences between source depth, target abstractness and depth distance, but all very small.
+
+Somewhat surprisingly, all the differences within tropes were very small (Table~\ref{tab:within}).  There are statistically significant differences between abstractedness and synonym density for metaphors (source is more concrete and has fewer synonyms) and depth for metonymy (source is closer to the root than target).
+
+When we look at the topics (Figure~\ref{fig:heatmap}), we find that metaphors are more likely to share the same topic between source and target than metaphors, the opposite of what Kövecses  predicted for domains.  This could be because wordnet topics are different from domains, in future work we will also look at domains, and consider why this should be the case for topics.  
+
+\begin{figure}
+  \centering
+\includegraphics[width=\textwidth]{build/metaphor_topic_heatmap.png}
+ \includegraphics[width=\textwidth]{build/metonym_topic_heatmap.png}  
+  \caption{Topic heatmaps for metaphor and metonymy}
+  \label{fig:heatmap}
+\end{figure}
+
+
+There are several other measures it would be nice to look at: inclusiveness (describe in Section~\ref{sec:approach}), the domain from \href{https://adimen.ehu.eus/web/XWND}{eXtended WordNet Domains} and sentiment.
+
+
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-ToDo
+Comparing Metaphor and Metonymy, we are able to show quantitatively, small but signifigant differences in the abstractness of the source (where the source of metaphors is less abstract (more concrete) than the source of metonyms).   A similar difference is found between the length of the path between the source and target  and in the distance between them as predicted by Kövecses.
 
+In future work we wish to also compare inclusiveness, which may be a better measure than abstractness, domains and sentiment.
 
 
 \bibliographystyle{apalike}

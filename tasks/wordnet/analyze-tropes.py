@@ -51,7 +51,8 @@ TROPE_MEASURES = [
     ('src_abstract',  'Source  Abstractness'),
     ('tgt_abstract',  'Target  Abstractness'),
     ('path_distance', 'Path Distance'),
-    ('depth_distance', 'Depth Distance'),
+    ('depth_difference', 'Depth Difference'),
+    ('abstract_difference', 'Abstract Difference'),
 ]
 
   
@@ -118,7 +119,8 @@ def measure_tropes(tropes, my_wn):
             'tgt_abstract': get_abstractness(ss2, my_wn),
             'path_distance': path_dist,
 #            'lin_distance': lin_dist,
-            'depth_distance': ss1.min_depth() - ss2.min_depth(),
+            'depth_difference': ss1.min_depth() - ss2.min_depth(),
+            'abstract_difference': get_abstractness(ss1, my_wn) - get_abstractness(ss2, my_wn),
         })
     return pd.DataFrame(scores)
 
@@ -185,6 +187,7 @@ def perform_statistical_tests(df):
     
    
     for measure_name, src_col, tgt_col, label in PAIRED_MEASURES:
+        print(measure_name, src_col, tgt_col, label)
         for trope_type, trope_df in [('metaphor', meta_df), ('metonym', meto_df)]:
             trope_name = 'Metaphor' if trope_type == 'metaphor' else 'Metonymy'
             
@@ -287,7 +290,8 @@ def create_comparison_plot_errorbar(df, src_col, tgt_col, ylabel, filename):
 
 def create_distance_plots_errorbar(df):
     """Create error bar plots for path and lin distances"""
-    for dist_type in ['path_distance',  'depth_distance']:
+    for dist_type in ['path_distance',  'depth_difference',
+                      'abstract_difference']:
         # Filter out None/NaN values
         valid_data = df[df[dist_type].notna()].copy()
         
@@ -431,10 +435,11 @@ def generate_latex_summary(df, test_results):
     latex_output.append("\\begin{table}[htbp]")
     latex_output.append("\\centering")
     latex_output.append("\\caption{Descriptive Statistics for Metaphor and Metonymy}")
+    latex_output.append("\\label{tab:stats}")
     latex_output.append("\\begin{tabular}{lrrrrrr}")
     latex_output.append("\\toprule")
     latex_output.append("Measure & \\multicolumn{3}{c}{Metaphor} & \\multicolumn{3}{c}{Metonymy} \\\\")
-    latex_output.append("\\cmidrule(lr){2-5} \\cmidrule(lr){6-9}")
+    latex_output.append("\\cmidrule(lr){2-4} \\cmidrule(lr){5-7}")
     latex_output.append("        & Mean &  SD & IQR & Mean  SD & IQR \\\\")
     latex_output.append("\\midrule")
     
@@ -453,7 +458,7 @@ def generate_latex_summary(df, test_results):
                           f"{meto_mean:.2f}  & {meto_sd:.2f} & {meto_iqr:.2f} \\\\")
     
     latex_output.append("\\midrule")
-    latex_output.append(f"N & \\multicolumn{{4}}{{c}}{{{len(meta_df)}}} & \\multicolumn{{4}}{{c}}{{{len(meto_df)}}} \\\\")
+    latex_output.append(f"N & \\multicolumn{{3}}{{c}}{{{len(meta_df)}}} & \\multicolumn{{3}}{{c}}{{{len(meto_df)}}} \\\\")
     latex_output.append("\\bottomrule")
     latex_output.append("\\end{tabular}")
     latex_output.append("\\end{table}")
@@ -464,12 +469,13 @@ def generate_latex_summary(df, test_results):
     latex_output.append("\\begin{table}[htbp]")
     latex_output.append("\\centering")
     latex_output.append("\\caption{Statistical Comparison: Metaphor vs Metonymy}")
+    latex_output.append("\\label{tab:between}")
     latex_output.append("\\begin{tabular}{lrrr}")
     latex_output.append("\\toprule")
     latex_output.append("Measure & Mann-Whitney $U$ & Cohen's $d$ & Effect Size \\\\")
     latex_output.append("\\midrule")
     
-    for col in ['src_depth', 'tgt_depth', 'src_synonyms', 'tgt_synonyms', 'path_distance']:
+    for col, label in TROPE_MEASURES:
         result = test_results['between_tropes'][col]
         p_formatted = format_p_value(result['p_value_mw'])
         effect = interpret_effect_size(result['cohens_d'])
@@ -486,12 +492,16 @@ def generate_latex_summary(df, test_results):
     latex_output.append("\\begin{table}[htbp]")
     latex_output.append("\\centering")
     latex_output.append("\\caption{Statistical Comparison: Source vs Target within Trope Types}")
+    latex_output.append("\\label{tab:within}")
     latex_output.append("\\begin{tabular}{lrrrr}")
     latex_output.append("\\toprule")
     latex_output.append("Comparison & Mean Diff & Wilcoxon & Cohen's $d$ & Effect Size \\\\")
     latex_output.append("\\midrule")
     
-    within_order = ['metaphor_depth', 'metaphor_synonyms', 'metonym_depth', 'metonym_synonyms']
+    within_order = ['metaphor_depth', 'metaphor_synonyms',
+                    'metaphor_abstract',
+                    'metonym_depth', 'metonym_synonyms',
+                    'metonym_abstract',    ]
     for key in within_order:
         if key in test_results['within_tropes']:
             result = test_results['within_tropes'][key]
@@ -642,8 +652,8 @@ if __name__ == "__main__":
                           'Min Depth', 'depth_comparison_errorbar.png')
     create_comparison_plot_errorbar(df, 'src_synonyms', 'tgt_synonyms', 
                           'Number of Synonyms', 'synonyms_comparison_errorbar.png')
-    create_comparison_plot_errorbar(df, 'src_depth', 'tgt_depth', 
-                                    'Min Depth', 'depth_comparison_errorbar.png')
+    create_comparison_plot_errorbar(df, 'src_abstract', 'tgt_abstract', 
+                                    'Abstractness', 'abstract_comparison_errorbar.png')
    
     create_distance_plots_errorbar(df)
     
