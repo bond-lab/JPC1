@@ -19,7 +19,7 @@ def load_corelex_json():
     path = find_file_recursive("data", target_file) or find_file_recursive(".", target_file)
     
     if not path:
-        print(f"❌ Error: Could not find {target_file}")
+        print(f" Error: Could not find {target_file}")
         return {}
 
     with open(path, 'r', encoding='utf-8') as f:
@@ -27,7 +27,7 @@ def load_corelex_json():
     
     # DEBUG: Print first 5 keys to confirm format
     keys = list(data.keys())[:5]
-    print(f"✅ Loaded {len(data)} types.")
+    print(f" Loaded {len(data)} types.")
     print(f"   Sample Keys: {keys} (Expecting 'word.n.01')")
     return data
 
@@ -42,14 +42,14 @@ def load_chainnet_data():
     return []
 
 def main():
-    print("--- 🧠 Semantic Shift Analysis (Direct Method) ---")
+    print("---  Semantic Shift Analysis (Direct Method) ---")
     
     # 1. Load Data
     corelex = load_corelex_json()
     chainnet_data = load_chainnet_data()
     
     if not corelex or not chainnet_data:
-        print("❌ Missing data files.")
+        print(" Missing data files.")
         return
 
     # 2. Setup NLTK
@@ -62,7 +62,7 @@ def main():
             nltk.download('wordnet')
             nltk.download('omw-1.4')
     except ImportError:
-        print("❌ NLTK not installed.")
+        print(" NLTK not installed.")
         return
 
     print("\n" + "="*85)
@@ -118,17 +118,17 @@ def main():
     print(f"Total Shifts Found: {count}")
 
     if count == 0 and match_count == 0:
-        print("\n❌ Zero matches. This means 'synset_to_type.json' uses WN 1.5 names")
+        print("\n Zero matches. This means 'synset_to_type.json' uses WN 1.5 names")
         print("   and NLTK is providing WN 3.0 names, and they don't overlap.")
     elif count == 0:
-        print("\nℹ️  Matches found, but no shifts detected. (Metaphors stay within same class?)")
+        print("\n  Matches found, but no shifts detected. (Metaphors stay within same class?)")
 
 if __name__ == "__main__":
     main()
 
->> --- 🧠 Semantic Shift Analysis (Direct Method) ---
+>> ---  Semantic Shift Analysis (Direct Method) ---
 --- 1. Loading CoreLex (Synset -> Type) ---
-✅ Loaded 82115 types.
+ Loaded 82115 types.
    Sample Keys: ['entity.n.01', 'physical_entity.n.01', 'abstraction.n.06', 'thing.n.12', 'object.n.01'] (Expecting 'word.n.01')
 --- 2. Loading ChainNet Data ---
 
