@@ -132,7 +132,7 @@ if __name__ == "__main__":
    Sample Keys: ['entity.n.01', 'physical_entity.n.01', 'abstraction.n.06', 'thing.n.12', 'object.n.01'] (Expecting 'word.n.01')
 --- 2. Loading ChainNet Data ---
 
->=====================================================================================
+>>===================================================================================
 WORD            SOURCE (Prototype)        ->   TARGET (Metaphor)
 =====================================================================================
 can             ARTIFACT                  ->  COMMUNICATION       
