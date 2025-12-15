@@ -66,7 +66,12 @@ def extract_metaphor_mappings_v2(pdf_path):
 
     # Note on PDF Extraction: In the MetaNet papers, mappings are often discussed in the body text or shown in figures (like Figure 1 in W15-1405). Automated extraction works best on the capitalized conventions (e.g., "LOVE IS A JOURNEY"). 
     For the most accurate data, parsing the OWL/RDF data (as shown in the previous turn) is preferred over PDF scraping because the PDF representation is unstructured.
+   
+    #Context Aware:1. It specifically targets the Source Domain: syntax found on pages 5, 7, 8, etc..
 
+                   2.Multi-word Support: It will correctly identify "CHANGE" -> "RELATIVE MOTION" instead of truncating it.
+
+                   3.Noise Reduction: By checking if line.isupper(), it avoids picking up random sentences in the body text that happen to use "is" between capitalized words (though the regex handles most of this, the check adds safety).
 
 https://docs.google.com/spreadsheets/d/1DIy7qy0Elw3JL2SuDhoQJNvw9WOoraMgh2hNWqcufuU/edit?usp=sharing
 https://docs.google.com/document/d/1wDsXksEQ43Vit8vmBa3tqHRSNODoJmRELlYB6MXWxZg/edit?usp=sharing
