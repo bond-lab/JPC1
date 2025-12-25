@@ -46,7 +46,9 @@ The original discussion asked for some different tasks:
   \end{itemize}
 \end{itemize}
 
-But I decided to go in a different direction, as there were some unexpected difficulties in importing chainnet into wordnet (the \texttt{wn} module did not yet support the \lnk{metaphor} and \lnk{metonym} links, neither did the wn-edit module).
+At first, I decided to go in a different direction, as there were some unexpected difficulties in importing chainnet into wordnet (the \texttt{wn} module did not yet support the \lnk{metaphor} and \lnk{metonym} links, neither did the wn-edit module).
+
+But \texttt{wn} version 0.14 supports  \lnk{metaphor} and \lnk{metonym}, so I did import ChainNet to the English Wordnet. 
 
 \section{Background}
 \label{sec:background}
@@ -69,6 +71,7 @@ Princeton WordNet 3.0 is a large, manually curated lexical database of English i
 
 The wn Python module is a modern, extensible interface for working programmatically with WordNet data and related lexical resources \citep{Goodman:Bond:2021}. It provides unified access to multiple WordNet versions and languages, supports querying of synsets, senses, and semantic relations, and allows users to integrate external annotations and extensions. Its design facilitates reproducible experimentation and large-scale analysis, making it well suited for computational studies of lexical semantics and for integrating resources such as ChainNet into broader processing pipelines.
 
+The wn\_edit module\footnote{\url{https://github.com/bond-lab/wn_edit}}  extends the `wn` module with capabilities for creating, modifying, and exporting WordNet lexicons. It works directly with `wn.lmf` data structures, ensuring full compatibility with the `wn` ecosystem.
 
 \section{Approach}
 \label{sec:approach}
@@ -124,6 +127,49 @@ Between tropes (Metaphor vs Metonymy) we measure for significance using the Mann
 % \includegraphics[width=\textwidth]{build/depth_comparison.png}
 % \includegraphics[width=\textwidth]{build/path_distance_comparison.png}
 
+
+\subsection*{Importing tropes to Wordnet}
+
+We used the new \texttt{wn\_edit} module to create a version of the English wordnet that contains the metaphor and metonymy links.
+
+The script \texttt{enhance.py}\footnote{Available at \url{https://github.com/fcbond/ChainNet}} does the following:
+\begin{enumerate}
+\item Load an English Wordnet (the default is \texttt{omw-en:1.4})
+\item Loads and parses the chainnet data (\texttt{chainnet\_\{metaphor|metonymy\}.json})
+\item Creates an index from the sensekey to the sense id
+\item Adds the metaphor and metonym links and their reverses to the
+  wordnet (\lnk{metaphor}, \lnk{has\_metaphor},
+  \lnk{metonym}, \lnk{has\_metonym})
+\item Saves it with a new version (the default is \texttt{omw-en:1.4.cn})
+\end{enumerate}
+
+The new wordnet can now be used to investigate tropes:
+\begin{scriptsize}
+\begin{verbatim}
+>>> import wn
+>>> wn.add('omw-en:1.4_cn.xml')
+Skipping omw-en:1.4.cn (OMW English Wordnet based on WordNet 3.0 with tropes from ChainNet); already added
+>>>
+>>> ewn=wn.Wordnet(lexicon='omw-en:1.4.cn')
+>>> 
+>>> for s in ewn.senses('chestnut'):
+...   print(s, s.relations())
+... 
+Sense('omw-en-chestnut-00373209-s') {'derivation': [Sense('omw-en-chestnut-04972350-n')]}
+Sense('omw-en-chestnut-12262905-n') {'has_metonym': [Sense('omw-en-chestnut-12262553-n')]}
+Sense('omw-en-chestnut-12262553-n') {'metonym': [Sense('omw-en-chestnut-12262905-n')], 
+                                     'has_metonym': [Sense('omw-en-chestnut-07772274-n')]}
+Sense('omw-en-chestnut-07772274-n') {'metaphor': [Sense('omw-en-chestnut-02468504-n')], 
+                                      'metonym': [Sense('omw-en-chestnut-12262553-n'),
+                                                  Sense('omw-en-chestnut-04972350-n')]}
+Sense('omw-en-chestnut-04972350-n') {'derivation': [Sense('omw-en-chestnut-00373209-s')], 
+                                     'has_metonym': [Sense('omw-en-chestnut-07772274-n')], 
+                                     'metonym': [Sense('omw-en-chestnut-02388735-n')]}
+Sense('omw-en-chestnut-02468504-n') {'has_metaphor': [Sense('omw-en-chestnut-07772274-n')]}
+Sense('omw-en-chestnut-02388735-n') {'has_metonym': [Sense('omw-en-chestnut-04972350-n')]}
+>>> 
+\end{verbatim}
+\end{scriptsize}
 \section{Discussion}
 \label{sec:discussion}
 
@@ -160,6 +206,8 @@ When we look at the topics (Figure~\ref{fig:heatmap}), we find that metaphors ar
 
 There are several other measures it would be nice to look at: inclusiveness (describe in Section~\ref{sec:approach}), the domain from \href{https://adimen.ehu.eus/web/XWND}{eXtended WordNet Domains} \citep{10.1007/978-3-642-28604-9_2} and sentiment.
 
+
+The wordnet merge script is very brittle, it has only been tested with one version of the Open Multilingual Wordnet, and will not work with the Open English Wordnet (yet).
 
 
 \section{Conclusions}
