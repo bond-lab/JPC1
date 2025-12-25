@@ -20,9 +20,11 @@ Both the code and the report need more work ---
 
 I made a script to add metaphor and metonym links to an English wordnet <https://github.com/fcbond/ChainNet>.
 
-The resulting wordnet is here: `omw-en:1.4_cn.xml.gz`
+The resulting wordnets are here: `omw-en:1.4_cn.xml.gz`, `oewn:2024_cn.xml.gz`.  The former has all the relations from ChainNet, the latter is missing 66, but has various new changes from the Open English Wordnet.
 
-You can load it with a `wn` version 0.14, which requires python 3.10 or above.
+
+
+You can load them with  `wn` version 0.14, which requires python 3.10 or above.
 
 ```
 >>> import wn
