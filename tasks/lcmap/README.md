@@ -77,4 +77,5 @@ https://docs.google.com/spreadsheets/d/1DIy7qy0Elw3JL2SuDhoQJNvw9WOoraMgh2hNWqcu
 https://docs.google.com/document/d/1wDsXksEQ43Vit8vmBa3tqHRSNODoJmRELlYB6MXWxZg/edit?usp=sharing
 
 
+[JSP3 Report on Metaphor Extraction and Research Continuity.pdf](https://github.com/user-attachments/files/24860145/JSP3.Report.on.Metaphor.Extraction.and.Research.Continuity.pdf)
 
