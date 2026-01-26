@@ -76,5 +76,5 @@ def extract_metaphor_mappings_v2(pdf_path):
 https://docs.google.com/spreadsheets/d/1DIy7qy0Elw3JL2SuDhoQJNvw9WOoraMgh2hNWqcufuU/edit?usp=sharing
 https://docs.google.com/document/d/1wDsXksEQ43Vit8vmBa3tqHRSNODoJmRELlYB6MXWxZg/edit?usp=sharing
 
-[JSP3 Report on Metaphor Extraction and Research Continuity.pdf](https://github.com/user-attachments/files/24859525/JSP3.Report.on.Metaphor.Extraction.and.Research.Continuity.pdf)
+
 
