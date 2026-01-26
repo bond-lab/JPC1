@@ -74,8 +74,9 @@ def extract_metaphor_mappings_v2(pdf_path):
                    3.Noise Reduction: By checking if line.isupper(), it avoids picking up random sentences in the body text that happen to use "is" between capitalized words (though the regex handles most of this, the check adds safety).
 
 https://docs.google.com/spreadsheets/d/1DIy7qy0Elw3JL2SuDhoQJNvw9WOoraMgh2hNWqcufuU/edit?usp=sharing
-https://docs.google.com/document/d/1wDsXksEQ43Vit8vmBa3tqHRSNODoJmRELlYB6MXWxZg/edit?usp=sharing
+https://docs.google.com/document/d/1wDsXksEQ43Vit8vmBa3tqHRSNOD
+[JSP3 Report on Metaphor Extraction and Research Continuity (2).pdf](https://github.com/user-attachments/files/24863014/JSP3.Report.on.Metaphor.Extraction.and.Research.Continuity.2.pdf)
+oJmRELlYB6MXWxZg/edit?usp=sharing
 
 
-[JSP3 Report on Metaphor Extraction and Research Continuity.pdf](https://github.com/user-attachments/files/24860145/JSP3.Report.on.Metaphor.Extraction.and.Research.Continuity.pdf)
 
