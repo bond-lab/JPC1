@@ -1,0 +1,134 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true]{hyperref}
+\hypersetup{
+    citecolor=OliveGreen,
+    linkcolor=NavyBlue,
+    urlcolor=NavyBlue
+}
+\usepackage{url}
+
+\title{JPC1: Extending Metaphor Using WordNet}
+\author{
+Jakub Pokorný (\href{https://github.com/pokoja12}{pokoja12})\\
+\href{mailto:student1@email.com}{pokoja12@upol.cz}
+\and
+Nikola Zdařilová\\
+\href{mailto:student2@email.com}{nikola.zdarilova02@upol.cz}
+}
+\date{29 January 2026}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+The main goal of this work is to extend already established metaphorical relationships to new lexical forms, with the intention of expanding them across different parts of speech, though not limited to this. Rather than treating metaphors as fixed expressions, this work approaches them as relationships that can be further examined to reveal additional metaphorical connections. 
+
+\section{Background}
+\label{sec:background}
+
+This work builds on existing lexical-semantic resources, particularly WordNet, which provides structured information about word meanings, synonyms, derivations, definitions, and example sentences. These resources enable systematic exploration of semantic and metaphorical relationships between words.
+
+\subsection*{Resources}
+\label{sec:resources}
+
+\begin{itemize}
+\item McCrae, John P., Rademaker, Alexandre, Bond, Francis, Rudnicka, Ewa, and Fellbaum, Christiane.
+\textit{English WordNet 2019 -- An Open-Source WordNet for English}.
+Proceedings of the 10th Global Wordnet Conference, Wroclaw, Poland, 2019.
+\url{https://aclanthology.org/2019.gwc-1.31/}
+\end{itemize}
+
+\clearpage  % nová stránka
+
+\section{Approach}
+\label{sec:approach}
+
+The program is designed to extend metaphorical relationships between pairs of words using WordNet. 
+The entire code was written in Python, as it is a great language for NLP tasks, thanks to its rich ecosystem of libraries and tools specifically designed for text processing and analysis.
+
+First, a predefined list of word pairs is iterated over, with one word treated as the base and the other as the metaphor. 
+For each pair, the program calls \texttt{extend\_metaphor} function, which generates all related lexical forms for both the base and metaphor words using the inner function \texttt{word\_related\_forms}. 
+This function collects synonyms and derivationally related forms, expanding the search to include words closely connected to the original terms.
+
+The program then examines the definitions and example sentences of each base word form, searching for occurrences of any metaphor word forms. 
+When a match is found, it is recorded along with the word's part of speech, whether the match occurred in a definition or an example, and the text with the metaphorical word highlighted like \texttt{<<this>>}.
+
+
+For reference, the lexical forms of both the base and metaphor words are printed, and the resulting matches are displayed in a readable format.
+
+\clearpage  % nová stránka
+
+\section{Results}
+\label{sec:results}
+
+The program produces both correct metaphorical matches and false matches, which must be manually verified.
+
+\subsection*{Examples of Correct Matches}
+
+\noindent\textbf{light \& understand}
+
+\begin{itemize}
+    \item \texttt{Light (n) / example match: although he saw it in a different light, he still did not <<understand>>}
+    \item \texttt{light (n) / definition match: mental <<understanding>> as an enlightening experience}
+    \item \texttt{illumination (n) / definition match: an <<interpret>>ation that removes obstacles to <<understanding>>}
+    \item \texttt{clearness (n) / definition match: free from obscurity and easy to <<understand>>; the comprehensibility of clear expression}
+\end{itemize}
+
+\noindent\textbf{dark \& ignorance}
+
+\begin{itemize}
+    \item \texttt{night (n) / definition match: a period of <<ignorance>> or backwardness or gloom}
+\end{itemize}
+
+\noindent\textbf{dark \& confusion}
+
+\begin{itemize}
+    \item \texttt{obscure (v) / example match: Her remarks <<confused>> the debate}
+\end{itemize}
+
+\subsection*{Examples of Incorrect Matches}
+
+\noindent\textbf{illuminate \& uncover}
+
+\begin{itemize}
+    \item \texttt{No matches were found.}
+\end{itemize}
+
+\noindent\textbf{light \& understand}
+
+\begin{itemize}
+    \item \texttt{easy (s) / definition match: <<read>>ily exploited or tricked}
+    \item \texttt{short (a) / definition match: primarily temporal sense; indicating or being or <<see>>ming to be limited in duration}
+    \item \texttt{clear (r) / example match: <<read>> the book clear to the end}
+    \item \texttt{faintness (n) / definition match: a feeling of faintness and of being <<read>>y to swoon}
+\end{itemize}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection*{Correct Matches}
+
+For pair \textit{light – understand}, the program successfully finds itself, i.e., it matches light through the word  \textit{understand} in definitions and examples. This demonstrates the functionality of the method and the legitimacy of the known metaphor. Furthermore, the program confirms the extension of the metaphor to the words illumination and clearness.
+
+For the pair \textit{dark – ignorance}, the program correctly identifies the metaphor \textit{night}, which is interpreted as a  \textit{period of ignorance}, and for \textit{dark – confusion}, it finds a metaphor in the verb  \textit{obscure}, which can reasonably be interpreted as an intention to  \textit{confuse}.
+
+\subsection*{Incorrect Matches}
+
+Surprisingly, for one of the given pairs, \textit{illuminate – uncover}, no matches were found.
+
+The program also generates a number of false positives. These occur, for example, with words like \textit{see} and  \textit{read}, which are synonyms of \textit{understand} and are also very frequent, leading to their erroneous identification as matches. Additionally, the word \textit{read} is sometimes mistakenly conflated with \textit{ready}, as it is contained within it.
+
+However, we do not wish to remove this element of internal matches, as we believe it increases the sensitivity of the search and allows the detection of subtler semantic relationships.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We examined how familiar metaphors can appear in forms different from their conventional expressions. This project provides insight into the flexible use of metaphor in language and shows that computational methods can help automatically identify metaphoric relationships.
+
+
+\end{document}
