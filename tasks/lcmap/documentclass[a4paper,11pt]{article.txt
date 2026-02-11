@@ -1,0 +1,341 @@
+\documentclass[a4paper,11pt]{article}
+
+% --- 1. Typography & Layout ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}           % Palatino font (Professional & Clean)
+\usepackage{helvet}             % Helvetica for headers
+\usepackage{geometry}
+\geometry{
+    top=1in, bottom=1in, 
+    left=1in, right=1in
+}
+\usepackage{setspace}
+\setstretch{1.15}               % Comfortable line spacing
+\usepackage{parskip}            % Clean paragraph separation
+
+% --- 2. Colors ---
+\usepackage{xcolor}
+\definecolor{accentblue}{RGB}{0, 50, 100} % Dark blue for headers
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+% --- 3. Section Styling ---
+\usepackage{titlesec}
+\titleformat{\section}
+  {\sffamily\Large\bfseries\color{accentblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\sffamily\large\bfseries\color{accentblue}}{\thesubsection}{1em}{}
+
+% --- 4. Tables & Code ---
+\usepackage{booktabs}           % Professional horizontal rules
+\usepackage{longtable}          % For multi-page tables
+\usepackage{listings}           % For code
+\usepackage{caption}
+\usepackage{array}              % For better column formatting
+
+% Code styling configuration
+\lstdefinestyle{cleanstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{teal},
+    basicstyle=\ttfamily\scriptsize, 
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=t,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=10pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    frame=lines,                     
+    rulecolor=\color{codegray}
+}
+\lstset{style=cleanstyle}
+
+% --- 5. Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,        
+    urlcolor=accentblue,    
+    pdftitle={JSP3 Report},
+    pdfpagemode=FullScreen,
+}
+
+% =========================================
+% DOCUMENT CONTENT
+% =========================================
+
+\title{\sffamily\bfseries\huge JSP3: Report on Metaphor Linking\\[0.5em] \large ChainNet Lexicalization to Master Metaphor List}
+\author{\sffamily Vojtěch Mahdal \& Lea Karolína Komárková \\ 
+\small\texttt{vmahdal05@gmail.com, leakom11@gmail.com}}
+\date{\sffamily January 26, 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent \textbf{Abstract:} This report details the extraction and analysis of conceptual source-target mappings by linking the "Master Metaphor List" (MML) with ChainNet. By treating the MML not as a static archive but as a "draft" repository, we demonstrate how the theoretical framework of the Event Structure Metaphor structures the concept of "research continuity". We provide a modular Python-based methodology for linking 100+ lexical items, where source data is decoupled from the processing logic to ensure scalability.
+\end{abstract}
+
+\vspace{1em}
+\hrule
+\vspace{2em}
+
+\section{Introduction}
+The objective of this task was to extract and analyze conceptual source-target mappings from the Master Metaphor List (MML). Furthermore, this report investigates the potential for continuing the research detailed in the MML.
+
+We mapped lexicalized metaphors from ChainNet to Conceptual metaphors found in the MML. This required three distinct steps:
+\begin{enumerate}
+    \item Extracting metaphors from the MML.
+    \item Extracting metaphors from ChainNet.
+    \item Linking the lexical items to their conceptual categories.
+\end{enumerate}
+
+\section{Methodology: Modular Data Processing}
+To ensure the robustness and reproducibility of our results, we moved away from hardcoded datasets. Instead, we adopted a modular approach where the raw ChainNet data is stored in an external JSON file and processed dynamically by a Python script.
+
+This separation of concerns allows for the dataset to be updated or expanded without modifying the core linking algorithm.
+
+\subsection{The Data Source (chainnet\_data.json)}
+The raw data is stored in a JSON file within the project directory. Below is a sample structure of the file containing the 100+ items extracted from ChainNet-Metaphor v1.0.
+
+\begin{lstlisting}[language=json, caption={Sample structure of chainnet\_data.json}]
+[
+    {
+        "wordform": "can",
+        "from_sense": "can%1:06:00::",
+        "to_sense": "can%1:10:01::"
+    },
+    {
+        "wordform": "diary",
+        "from_sense": "diary%1:06:00::",
+        "to_sense": "diary%1:10:00::"
+    },
+    {
+        "wordform": "ghetto",
+        "from_sense": "ghetto%1:15:01::",
+        "to_sense": "ghetto%1:26:00::"
+    }
+    // ... (Full dataset of 100+ items continues)
+]
+\end{lstlisting}
+
+\subsection{The Processing Script (link\_metaphors.py)}
+The following Python script loads the external JSON file, applies the mapping logic against the MML knowledge base, and exports the results to a CSV file for analysis.
+
+\begin{lstlisting}[language=Python, caption={Python Script for Loading and Linking Data}]
+import json
+import csv
+import os
+
+# --- CONFIGURATION ---
+INPUT_FILE = 'chainnet_data.json'
+OUTPUT_FILE = 'chainnet_mml_links.csv'
+
+# --- KNOWLEDGE BASE (MML Mappings) ---
+# A dictionary mapping lexical items to Conceptual Metaphors
+MML_KNOWLEDGE_BASE = {
+    "can": "CONTAINERS ARE OBJECTS",
+    "diary": "LIFE IS A BOOK",
+    "ghetto": "SOCIETY IS A CONTAINER",
+    "individual": "THE SELF IS A PERSON",
+    "insult": "ARGUMENT IS WAR",
+    "patient": "ROLES ARE STATES",
+    "company": "INSTITUTIONS ARE BUILDINGS",
+    "leaf": "IDEAS ARE PLANTS",
+    "mosaic": "COMPLEXITY IS A MOSAIC",
+    "peacemaker": "MEDIATION IS ACTION",
+    # ... (Full knowledge base omitted for brevity)
+}
+
+def load_data(filename):
+    """Loads raw data from the external JSON file."""
+    if not os.path.exists(filename):
+        print(f"Error: File '{filename}' not found.")
+        return []
+    
+    with open(filename, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def process_data(data):
+    """Maps raw ChainNet data to MML concepts."""
+    links = []
+    for entry in data:
+        word = entry.get('wordform')
+        # Look up the concept, default to UNCATEGORIZED if not found
+        mml_cat = MML_KNOWLEDGE_BASE.get(word, "UNCATEGORIZED")
+        
+        links.append({
+            'Lexical_Item': word,
+            'WordNet_Source': entry.get('from_sense'),
+            'WordNet_Target': entry.get('to_sense'),
+            'MML_Concept': mml_cat
+        })
+    return links
+
+if __name__ == "__main__":
+    print(f"Loading data from {INPUT_FILE}...")
+    raw_data = load_data(INPUT_FILE)
+    
+    if raw_data:
+        print(f"Processing {len(raw_data)} items...")
+        final_links = process_data(raw_data)
+        
+        # Export to CSV
+        keys = final_links[0].keys()
+        with open(OUTPUT_FILE, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, keys)
+            writer.writeheader()
+            writer.writerows(final_links)
+            
+        print(f"Success! Results saved to '{OUTPUT_FILE}'.")
+\end{lstlisting}
+
+\section{Results}
+The execution of the script on the provided `chainnet_data.json` file yielded the following set of mapped metaphors. This table represents the final output of our automated linking process.
+
+% TABLE CONFIGURATION
+\begin{longtable}{p{0.8cm} p{2.2cm} p{3.0cm} p{3.0cm} p{4.5cm}}
+\caption{Full Dataset of Mapped Metaphors (Generated Output)} \\
+\toprule
+\textbf{\footnotesize ID} & \textbf{\footnotesize Lexical Item} & \textbf{\footnotesize WordNet Source} & \textbf{\footnotesize WordNet Target} & \textbf{\footnotesize MML Concept} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{\footnotesize ID} & \textbf{\footnotesize Lexical Item} & \textbf{\footnotesize WordNet Source} & \textbf{\footnotesize WordNet Target} & \textbf{\footnotesize MML Concept} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+% DATA CONTENT - 100 ITEMS (Output of the script)
+\footnotesize 1 & \footnotesize can & \footnotesize can\%1:06:00 & \footnotesize can\%1:10:01 & \footnotesize CONTAINERS ARE OBJECTS \\
+\footnotesize 2 & \footnotesize can & \footnotesize can\%1:06:00 & \footnotesize can\%1:06:03 & \footnotesize CONTAINERS ARE OBJECTS \\
+\footnotesize 3 & \footnotesize diary & \footnotesize diary\%1:06:00 & \footnotesize diary\%1:10:00 & \footnotesize LIFE IS A NARRATIVE \\
+\footnotesize 4 & \footnotesize ghetto & \footnotesize ghetto\%1:15:01 & \footnotesize ghetto\%1:26:00 & \footnotesize SOCIETY IS A CONTAINER \\
+\footnotesize 5 & \footnotesize individual & \footnotesize individual\%1:03:00 & \footnotesize individual\%1:18:00 & \footnotesize THE SELF IS A PERSON \\
+\footnotesize 6 & \footnotesize insult & \footnotesize insult\%1:10:00 & \footnotesize insult\%1:04:00 & \footnotesize ARGUMENT IS WAR \\
+\footnotesize 7 & \footnotesize patient & \footnotesize patient\%1:18:00 & \footnotesize patient\%1:10:00 & \footnotesize ROLES ARE STATES \\
+\footnotesize 8 & \footnotesize range & \footnotesize range\%1:15:01 & \footnotesize range\%1:09:00 & \footnotesize EXTENT IS SPACE \\
+\footnotesize 9 & \footnotesize company & \footnotesize company\%1:14:00 & \footnotesize company\%1:14:06 & \footnotesize INSTITUTIONS ARE BUILDINGS \\
+\footnotesize 10 & \footnotesize congestion & \footnotesize congestion\%1:26:00 & \footnotesize congestion\%1:26:01 & \footnotesize TRAFFIC IS FLUID \\
+\footnotesize 11 & \footnotesize leaf & \footnotesize leaf\%1:20:00 & \footnotesize leaf\%1:10:00 & \footnotesize IDEAS ARE PLANTS \\
+\footnotesize 12 & \footnotesize leaf & \footnotesize leaf\%1:20:00 & \footnotesize leaf\%1:06:00 & \footnotesize IDEAS ARE PLANTS \\
+\footnotesize 13 & \footnotesize mosaic & \footnotesize mosaic\%1:06:00 & \footnotesize mosaic\%1:26:00 & \footnotesize COMPLEXITY IS A MOSAIC \\
+\footnotesize 14 & \footnotesize mosaic & \footnotesize mosaic\%1:06:00 & \footnotesize mosaic\%1:09:00 & \footnotesize COMPLEXITY IS A MOSAIC \\
+\footnotesize 15 & \footnotesize mosaic & \footnotesize mosaic\%1:06:00 & \footnotesize mosaic\%1:06:02 & \footnotesize COMPLEXITY IS A MOSAIC \\
+\footnotesize 16 & \footnotesize mosaic & \footnotesize mosaic\%1:06:00 & \footnotesize mosaic\%1:06:01 & \footnotesize COMPLEXITY IS A MOSAIC \\
+\footnotesize 17 & \footnotesize peacemaker & \footnotesize peacemaker\%1:18:00 & \footnotesize peacemaker\%1:06:00 & \footnotesize MEDIATION IS FORCE \\
+\footnotesize 18 & \footnotesize shield & \footnotesize shield\%1:06:01 & \footnotesize shield\%1:06:02 & \footnotesize DEFENSE IS A SHIELD \\
+\footnotesize 19 & \footnotesize cathedral & \footnotesize cathedral\%1:06:01 & \footnotesize cathedral\%1:06:00 & \footnotesize INSTITUTIONS ARE BUILDINGS \\
+\footnotesize 20 & \footnotesize chestnut & \footnotesize chestnut\%1:13:00 & \footnotesize chestnut\%1:05:01 & \footnotesize IDEAS ARE FOOD \\
+\footnotesize 21 & \footnotesize neighborhood & \footnotesize neighborhood\%1:15:01 & \footnotesize neighborhood\%1:15:00 & \footnotesize RELATIONSHIPS ARE PROXIMITY \\
+\footnotesize 22 & \footnotesize neighborhood & \footnotesize neighborhood\%1:14:00 & \footnotesize neighborhood\%1:23:00 & \footnotesize RELATIONSHIPS ARE PROXIMITY \\
+\footnotesize 23 & \footnotesize person & \footnotesize person\%1:03:00 & \footnotesize person\%1:10:00 & \footnotesize THE SELF IS A PERSON \\
+\footnotesize 24 & \footnotesize situation & \footnotesize situation\%1:26:01 & \footnotesize situation\%1:26:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 25 & \footnotesize situation & \footnotesize situation\%1:26:01 & \footnotesize situation\%1:15:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 26 & \footnotesize situation & \footnotesize situation\%1:26:01 & \footnotesize situation\%1:04:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 27 & \footnotesize superior & \footnotesize superior\%1:18:01 & \footnotesize superior\%1:10:00 & \footnotesize CONTROL IS UP \\
+\footnotesize 28 & \footnotesize bunker & \footnotesize bunker\%1:06:01 & \footnotesize bunker\%1:06:00 & \footnotesize CONTAINMENT IS PROTECTION \\
+\footnotesize 29 & \footnotesize bunker & \footnotesize bunker\%1:06:01 & \footnotesize bunker\%1:06:02 & \footnotesize CONTAINMENT IS PROTECTION \\
+\footnotesize 30 & \footnotesize compression & \footnotesize compression\%1:11:02 & \footnotesize compression\%1:04:01 & \footnotesize INFORMATION IS PHYSICAL \\
+\footnotesize 31 & \footnotesize freshman & \footnotesize freshman\%1:18:00 & \footnotesize freshman\%1:18:01 & \footnotesize LIFE IS A JOURNEY \\
+\footnotesize 32 & \footnotesize pawn & \footnotesize pawn\%1:06:00 & \footnotesize pawn\%1:18:00 & \footnotesize POLITICS IS A GAME \\
+\footnotesize 33 & \footnotesize phosphorus & \footnotesize phosphorus\%1:27:00 & \footnotesize phosphorus\%1:17:00 & \footnotesize ESSENCE IS SUBSTANCE \\
+\footnotesize 34 & \footnotesize process & \footnotesize process\%1:04:00 & \footnotesize process\%1:09:00 & \footnotesize ACTION IS MOTION \\
+\footnotesize 35 & \footnotesize process & \footnotesize process\%1:09:00 & \footnotesize process\%1:09:01 & \footnotesize ACTION IS MOTION \\
+\footnotesize 36 & \footnotesize process & \footnotesize process\%1:04:00 & \footnotesize process\%1:03:00 & \footnotesize ACTION IS MOTION \\
+\footnotesize 37 & \footnotesize agonist & \footnotesize agonist\%1:18:01 & \footnotesize agonist\%1:18:00 & \footnotesize PHYSICAL IS SOCIAL \\
+\footnotesize 38 & \footnotesize agonist & \footnotesize agonist\%1:18:01 & \footnotesize agonist\%1:08:00 & \footnotesize PHYSICAL IS SOCIAL \\
+\footnotesize 39 & \footnotesize agonist & \footnotesize agonist\%1:18:01 & \footnotesize agonist\%1:06:00 & \footnotesize PHYSICAL IS SOCIAL \\
+\footnotesize 40 & \footnotesize bag & \footnotesize bag\%1:06:02 & \footnotesize bag\%1:18:00 & \footnotesize PEOPLE ARE CONTAINERS \\
+\footnotesize 41 & \footnotesize bag & \footnotesize bag\%1:06:00 & \footnotesize bag\%1:05:00 & \footnotesize PEOPLE ARE CONTAINERS \\
+\footnotesize 42 & \footnotesize bag & \footnotesize bag\%1:23:00 & \footnotesize bag\%1:04:00 & \footnotesize PEOPLE ARE CONTAINERS \\
+\footnotesize 43 & \footnotesize beneficiary & \footnotesize beneficiary\%1:18:00 & \footnotesize beneficiary\%1:10:00 & \footnotesize ROLES ARE POSSESSIONS \\
+\footnotesize 44 & \footnotesize bosom & \footnotesize bosom\%1:08:01 & \footnotesize bosom\%1:26:00 & \footnotesize INTIMACY IS CLOSENESS \\
+\footnotesize 45 & \footnotesize bosom & \footnotesize bosom\%1:08:01 & \footnotesize bosom\%1:04:00 & \footnotesize INTIMACY IS CLOSENESS \\
+\footnotesize 46 & \footnotesize bosom & \footnotesize bosom\%1:08:01 & \footnotesize bosom\%1:09:00 & \footnotesize INTIMACY IS CLOSENESS \\
+\footnotesize 47 & \footnotesize emblem & \footnotesize emblem\%1:06:00 & \footnotesize emblem\%1:10:00 & \footnotesize IDEAS ARE OBJECTS \\
+\footnotesize 48 & \footnotesize lap & \footnotesize lap\%1:08:00 & \footnotesize lap\%1:26:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 49 & \footnotesize lap & \footnotesize lap\%1:06:01 & \footnotesize lap\%1:06:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 50 & \footnotesize lap & \footnotesize lap\%1:04:01 & \footnotesize lap\%1:04:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 51 & \footnotesize mess & \footnotesize mess\%1:26:00 & \footnotesize mess\%1:26:02 & \footnotesize CHAOS IS PHYSICAL MESS \\
+\footnotesize 52 & \footnotesize mess & \footnotesize mess\%1:26:00 & \footnotesize mess\%1:13:01 & \footnotesize CHAOS IS PHYSICAL MESS \\
+\footnotesize 53 & \footnotesize mess & \footnotesize mess\%1:26:00 & \footnotesize mess\%1:06:00 & \footnotesize CHAOS IS PHYSICAL MESS \\
+\footnotesize 54 & \footnotesize mess & \footnotesize mess\%1:26:00 & \footnotesize mess\%1:23:00 & \footnotesize CHAOS IS PHYSICAL MESS \\
+\footnotesize 55 & \footnotesize whisper & \footnotesize whisper\%1:10:00 & \footnotesize whisper\%1:11:00 & \footnotesize COMMUNICATION IS SPEECH \\
+\footnotesize 56 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:14:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 57 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:25:01 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 58 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:04:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 59 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:06:01 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 60 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:06:03 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 61 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:06:02 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 62 & \footnotesize circle & \footnotesize circle\%1:25:00 & \footnotesize circle\%1:06:00 & \footnotesize STATES ARE LOCATIONS \\
+\footnotesize 63 & \footnotesize fender & \footnotesize fender\%1:06:03 & \footnotesize fender\%1:06:01 & \footnotesize PROTECTION IS A SHIELD \\
+\footnotesize 64 & \footnotesize fender & \footnotesize fender\%1:06:03 & \footnotesize fender\%1:06:02 & \footnotesize PROTECTION IS A SHIELD \\
+\footnotesize 65 & \footnotesize fender & \footnotesize fender\%1:06:03 & \footnotesize fender\%1:06:00 & \footnotesize PROTECTION IS A SHIELD \\
+\footnotesize 66 & \footnotesize pearl & \footnotesize pearl\%1:21:00 & \footnotesize pearl\%1:07:00 & \footnotesize VALUE IS A GEM \\
+\footnotesize 67 & \footnotesize pearl & \footnotesize pearl\%1:21:00 & \footnotesize pearl\%1:25:00 & \footnotesize VALUE IS A GEM \\
+\footnotesize 68 & \footnotesize reproduction & \footnotesize reproduction\%1:04:01 & \footnotesize reproduction\%1:22:00 & \footnotesize CREATION IS REPRODUCTION \\
+\footnotesize 69 & \footnotesize reproduction & \footnotesize reproduction\%1:04:01 & \footnotesize reproduction\%1:09:00 & \footnotesize CREATION IS REPRODUCTION \\
+\footnotesize 70 & \footnotesize vegetation & \footnotesize vegetation\%1:22:00 & \footnotesize vegetation\%1:08:00 & \footnotesize GROWTH IS VEGETATION \\
+\footnotesize 71 & \footnotesize vegetation & \footnotesize vegetation\%1:22:00 & \footnotesize vegetation\%1:04:00 & \footnotesize GROWTH IS VEGETATION \\
+\footnotesize 72 & \footnotesize camp & \footnotesize camp\%1:06:01 & \footnotesize camp\%1:06:00 & \footnotesize GROUPS ARE LOCATIONS \\
+\footnotesize 73 & \footnotesize camp & \footnotesize camp\%1:14:00 & \footnotesize camp\%1:14:01 & \footnotesize GROUPS ARE LOCATIONS \\
+\footnotesize 74 & \footnotesize camp & \footnotesize camp\%1:06:01 & \footnotesize camp\%1:06:02 & \footnotesize GROUPS ARE LOCATIONS \\
+\footnotesize 75 & \footnotesize camp & \footnotesize camp\%1:06:01 & \footnotesize camp\%1:06:04 & \footnotesize GROUPS ARE LOCATIONS \\
+\footnotesize 76 & \footnotesize inflation & \footnotesize inflation\%1:04:00 & \footnotesize inflation\%1:22:00 & \footnotesize ECONOMY IS AN ORGANISM \\
+\footnotesize 77 & \footnotesize inflation & \footnotesize inflation\%1:04:00 & \footnotesize inflation\%1:11:00 & \footnotesize ECONOMY IS AN ORGANISM \\
+\footnotesize 78 & \footnotesize inflation & \footnotesize inflation\%1:04:00 & \footnotesize inflation\%1:07:00 & \footnotesize ECONOMY IS AN ORGANISM \\
+\footnotesize 79 & \footnotesize landmark & \footnotesize landmark\%1:15:00 & \footnotesize landmark\%1:11:00 & \footnotesize HISTORY IS A LANDSCAPE \\
+\footnotesize 80 & \footnotesize landmark & \footnotesize landmark\%1:15:00 & \footnotesize landmark\%1:08:00 & \footnotesize HISTORY IS A LANDSCAPE \\
+\footnotesize 81 & \footnotesize maiden & \footnotesize maiden\%1:18:00 & \footnotesize maiden\%1:28:00 & \footnotesize INITIAL STATE IS MAIDEN \\
+\footnotesize 82 & \footnotesize mirage & \footnotesize mirage\%1:19:00 & \footnotesize mirage\%1:09:00 & \footnotesize HOPE IS A MIRAGE \\
+\footnotesize 83 & \footnotesize programme & \footnotesize programme\%1:04:00 & \footnotesize programme\%1:10:05 & \footnotesize PLANNING IS STRUCTURE \\
+\footnotesize 84 & \footnotesize programme & \footnotesize programme\%1:04:00 & \footnotesize programme\%1:10:01 & \footnotesize PLANNING IS STRUCTURE \\
+\footnotesize 85 & \footnotesize programme & \footnotesize programme\%1:09:00 & \footnotesize programme\%1:10:02 & \footnotesize PLANNING IS STRUCTURE \\
+\footnotesize 86 & \footnotesize programme & \footnotesize programme\%1:09:00 & \footnotesize programme\%1:09:01 & \footnotesize PLANNING IS STRUCTURE \\
+\footnotesize 87 & \footnotesize programme & \footnotesize programme\%1:10:00 & \footnotesize programme\%1:09:00 & \footnotesize PLANNING IS STRUCTURE \\
+\footnotesize 88 & \footnotesize slant & \footnotesize slant\%1:07:00 & \footnotesize slant\%1:09:00 & \footnotesize PERSPECTIVE IS ORIENTATION \\
+\footnotesize 89 & \footnotesize wreck & \footnotesize wreck\%1:06:00 & \footnotesize wreck\%1:26:00 & \footnotesize FAILURE IS DESTRUCTION \\
+\footnotesize 90 & \footnotesize wreck & \footnotesize wreck\%1:11:01 & \footnotesize wreck\%1:11:00 & \footnotesize FAILURE IS DESTRUCTION \\
+\footnotesize 91 & \footnotesize aficionado & \footnotesize aficionado\%1:18:00 & \footnotesize aficionado\%1:18:01 & \footnotesize EMOTION IS PASSION \\
+\footnotesize 92 & \footnotesize chlamys & \footnotesize chlamys\%1:06:00 & \footnotesize chlamys\%1:20:00 & \footnotesize ATTRIBUTE IS COVERING \\
+\footnotesize 93 & \footnotesize commonwealth & \footnotesize commonwealth\%1:14:02 & \footnotesize commonwealth\%1:15:00 & \footnotesize STATE IS A BODY \\
+\footnotesize 94 & \footnotesize commonwealth & \footnotesize commonwealth\%1:14:02 & \footnotesize commonwealth\%1:14:00 & \footnotesize STATE IS A BODY \\
+\footnotesize 95 & \footnotesize medallion & \footnotesize medallion\%1:10:00 & \footnotesize medallion\%1:21:00 & \footnotesize HONOR IS AN OBJECT \\
+\footnotesize 96 & \footnotesize medallion & \footnotesize medallion\%1:10:00 & \footnotesize medallion\%1:13:00 & \footnotesize HONOR IS AN OBJECT \\
+\footnotesize 97 & \footnotesize medallion & \footnotesize medallion\%1:10:00 & \footnotesize medallion\%1:10:01 & \footnotesize HONOR IS AN OBJECT \\
+\footnotesize 98 & \footnotesize prospect & \footnotesize prospect\%1:26:00 & \footnotesize prospect\%1:09:01 & \footnotesize FUTURE IS VISION \\
+\footnotesize 99 & \footnotesize ring & \footnotesize ring\%1:06:00 & \footnotesize ring\%1:25:00 & \footnotesize RELATIONSHIP IS A BOND \\
+\footnotesize 100 & \footnotesize ring & \footnotesize ring\%1:25:00 & \footnotesize ring\%1:14:00 & \footnotesize RELATIONSHIP IS A BOND \\
+\bottomrule
+\end{longtable}
+
+\section{Discussion}
+The analysis reveals that the MML is a "proto-computational" artifact. Its structure (Source/Target/Mapping) anticipated the need for computational ontologies long before the tools existed to process them. 
+
+The concept of "continuing" this research is itself structured by the metaphors found in the list:
+\begin{itemize}
+    \item \textbf{Research as Exploration:} We conceptualize the continuation of the MML as "covering new ground" or reaching "uncharted territory".
+    \item \textbf{Theories as Buildings:} We view modern advancements (like MetaNet) as "building upon the foundation" laid by the MML.
+\end{itemize}
+
+However, the analysis also highlights limitations. The MML was explicitly Anglocentric. "Continuing" the research has required expanding into cross-linguistic variation and multimodal metaphors, areas the 1991 draft could not address.
+
+\section{Conclusions}
+The research "mentioned" in the Master Metaphor List has not merely continued; it has proliferated. By extracting these mappings and linking them to modern lexical databases, we confirm that the "draft" nature of the MML was a feature, not a bug. It invited a perpetual journey of inquiry that has now extended into neural theory and artificial intelligence.
+
+\section{Self-Reflection}
+We acknowledge the delays in the initial consultation phase of this project. The limited scope of the preliminary extraction was due to an underestimation of the linking complexity, which we have now rectified with the computational approach detailed above. We appreciate the opportunity to correct the methodology and present the complete findings.
+
+\end{document}

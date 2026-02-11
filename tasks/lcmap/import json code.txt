@@ -1,0 +1,65 @@
+import json
+import csv
+import os
+
+# --- CONFIGURATION ---
+INPUT_FILE = 'chainnet_data.json'
+OUTPUT_FILE = 'chainnet_mml_links.csv'
+
+# --- KNOWLEDGE BASE (MML Mappings) ---
+# A dictionary mapping lexical items to Conceptual Metaphors
+MML_KNOWLEDGE_BASE = {
+    "can": "CONTAINERS ARE OBJECTS",
+    "diary": "LIFE IS A BOOK",
+    "ghetto": "SOCIETY IS A CONTAINER",
+    "individual": "THE SELF IS A PERSON",
+    "insult": "ARGUMENT IS WAR",
+    "patient": "ROLES ARE STATES",
+    "company": "INSTITUTIONS ARE BUILDINGS",
+    "leaf": "IDEAS ARE PLANTS",
+    "mosaic": "COMPLEXITY IS A MOSAIC",
+    "peacemaker": "MEDIATION IS ACTION",
+    # ... (Full knowledge base omitted for brevity)
+}
+
+def load_data(filename):
+    """Loads raw data from the external JSON file."""
+    if not os.path.exists(filename):
+        print(f"Error: File '{filename}' not found.")
+        return []
+    
+    with open(filename, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def process_data(data):
+    """Maps raw ChainNet data to MML concepts."""
+    links = []
+    for entry in data:
+        word = entry.get('wordform')
+        # Look up the concept, default to UNCATEGORIZED if not found
+        mml_cat = MML_KNOWLEDGE_BASE.get(word, "UNCATEGORIZED")
+        
+        links.append({
+            'Lexical_Item': word,
+            'WordNet_Source': entry.get('from_sense'),
+            'WordNet_Target': entry.get('to_sense'),
+            'MML_Concept': mml_cat
+        })
+    return links
+
+if __name__ == "__main__":
+    print(f"Loading data from {INPUT_FILE}...")
+    raw_data = load_data(INPUT_FILE)
+    
+    if raw_data:
+        print(f"Processing {len(raw_data)} items...")
+        final_links = process_data(raw_data)
+        
+        # Export to CSV
+        keys = final_links[0].keys()
+        with open(OUTPUT_FILE, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, keys)
+            writer.writeheader()
+            writer.writerows(final_links)
+            
+        print(f"Success! Results saved to '{OUTPUT_FILE}'.")
