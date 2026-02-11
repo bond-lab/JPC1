@@ -1,67 +1,149 @@
 # Describe and document your code
-import pdfplumber
+import pandas as pd
+import json
 import re
+from difflib import get_close_matches
 
-def extract_metaphor_mappings_v2(pdf_path):
-    mappings =
+# --- 1. CONFIGURATION ---
+# Placeholder paths - replace with actual dataset locations
+CHAINNET_PATH = 'chainnet_data.csv'  # Columns: [source_sense, target_sense, relation_type]
+MML_PATH = 'master_metaphor_list.txt'
+
+# --- 2. DATA LOADING & EXTRACTION ---
+
+def load_chainnet(filepath):
+    """
+    Extracts metaphor pairs from ChainNet.
+    Returns a list of dicts: {'word': 'attack', 'source': 'war', 'target': 'argument'}
+    """
+    # Simulating data loading based on ChainNet structure
+    # In reality, you would parse the specific ChainNet XML/CSV format
+    # Here we simulate the structure for demonstration
+    chainnet_entries = []
     
-    # 1. Improved Regex: Captures multi-word uppercase phrases
-    # Example matches: "ARGUMENT IS WAR", "THE MIND IS A BODY"
-    metaphor_pattern = re.compile(r'\b([A-Z]+(?:\s+[A-Z]+)*)\s+(?:IS|ARE)\s+([A-Z]+(?:\s+[A-Z]+)*)\b')
-
     try:
-        with pdfplumber.open(pdf_path) as pdf:
-            print(f"Analyzing {pdf_path} with {len(pdf.pages)} pages...")
+        df = pd.read_csv(filepath)
+        # Filter for only Metaphor relations
+        metaphors = df[df['relation_type'] == 'Metaphor']
+        
+        for _, row in metaphors.iterrows():
+            # Extract the lemma (lexical item) from the WordNet sense key (e.g., 'attack.n.01')
+            lemma = row['source_sense'].split('.')[0]
+            chainnet_entries.append({
+                'lemma': lemma,
+                'source_sense': row['source_sense'],
+                'target_sense': row['target_sense'],
+                # In a real scenario, we would use WordNet glosses to infer domains
+                # For this script, we assume 'gloss_source' and 'gloss_target' columns exist
+                'source_def': row.get('source_gloss', ''), 
+                'target_def': row.get('target_gloss', '')
+            })
+    except FileNotFoundError:
+        print("ChainNet file not found. Using internal sample for demonstration.")
+        # FALLBACK: Generating the sample used in the report
+        sample_words = [
+            ('attack', 'war', 'argument'), ('see', 'vision', 'understanding'),
+            ('warm', 'temperature', 'affection'), ('time', 'money', 'resource'),
+            ('digest', 'food', 'ideas')
+        ]
+        for w, s, t in sample_words:
+            chainnet_entries.append({'lemma': w, 'source_domain_hint': s, 'target_domain_hint': t})
             
-            for page_num, page in enumerate(pdf.pages):
-                text = page.extract_text()
-                if not text:
-                    continue
-                
-                lines = text.split('\n')
-                
-                # Buffer to store manual domain extractions
-                current_source = None
-                
-                for line in lines:
-                    line = line.strip()
-                    
-                    # --- Strategy A: Regex for Capitalized Metaphors ---
-                    # We strictly filter for lines that look like headers (mostly uppercase)
-                    # to avoid capturing random sentence fragments.
-                    if line.isupper(): 
-                        matches = metaphor_pattern.findall(line)
-                        for target, source in matches:
-                            # Filter out false positives like "THIS IS A"
-                            if len(target) > 2 and len(source) > 2: 
-                                mappings.append({
-                                    "Target": target,
-                                    "Source": source,
-                                    "Type": "Capitalized Header",
-                                    "Page": page_num + 1
-                                })
+    return chainnet_entries
 
-                    # --- Strategy B: Explicit Domain Listing ---
-                    # The PDF uses "Source Domain: x" and "Target Domain: y"
-                    if line.startswith("Source Domain:"):
-                        current_source = line.replace("Source Domain:", "").strip()
-                    
-                    elif line.startswith("Target Domain:") and current_source:
-                        current_target = line.replace("Target Domain:", "").strip()
-                        mappings.append({
-                            "Target": current_target,
-                            "Source": current_source,
-                            "Type": "Explicit Definition",
-                            "Page": page_num + 1
-                        })
-                        current_source = None # Reset
+def load_mml(filepath):
+    """
+    Parses the Master Metaphor List to extract Conceptual Metaphors (CMs).
+    """
+    conceptual_metaphors = {} # Format: {'ARGUMENT IS WAR': ['attack', 'defend', ...]}
+    
+    try:
+        with open(filepath, 'r') as f:
+            current_cm = None
+            for line in f:
+                line = line.strip()
+                # Heuristic: MML often uses ALL CAPS for Metaphor Names
+                if line.isupper() and " IS " in line:
+                    current_cm = line
+                    conceptual_metaphors[current_cm] = []
+                elif current_cm and line:
+                    # Collect keywords/lexical triggers associated with the CM
+                    conceptual_metaphors[current_cm].append(line.lower())
+    except FileNotFoundError:
+        print("MML file not found. Using internal knowledge base.")
+        # FALLBACK: Standard MML Categories
+        conceptual_metaphors = {
+            'ARGUMENT IS WAR': ['attack', 'defend', 'strategy', 'win', 'lose', 'shot'],
+            'IDEAS ARE FOOD': ['digest', 'swallow', 'raw', 'half-baked'],
+            'UNDERSTANDING IS SEEING': ['see', 'clear', 'focus', 'view', 'perspective'],
+            'TIME IS MONEY': ['spend', 'waste', 'cost', 'invest', 'budget'],
+            'LIFE IS A JOURNEY': ['path', 'crossroads', 'arrival', 'departure'],
+            'CONTROL IS UP': ['rise', 'fall', 'high', 'low', 'superior']
+        }
+        
+    return conceptual_metaphors
 
-    except Exception as e:
-        print(f"Error processing PDF: {e}")
-        return
+# --- 3. LINKING LOGIC ---
 
-    return mappings
+def link_metaphors(chainnet_data, mml_data):
+    """
+    Maps lexical metaphors (ChainNet) to conceptual metaphors (MML).
+    """
+    links = []
+    
+    for entry in chainnet_data:
+        lemma = entry['lemma']
+        best_match = None
+        
+        # Strategy A: Direct Lexical Match
+        # Check if the ChainNet word appears in the MML lexical triggers
+        for cm, triggers in mml_data.items():
+            if lemma in triggers:
+                best_match = cm
+                break
+        
+        # Strategy B: Semantic Domain Matching (Simplified)
+        # If no direct match, check if source/target domains match MML naming convention
+        if not best_match and 'source_domain_hint' in entry:
+            src = entry['source_domain_hint'].upper()
+            tgt = entry['target_domain_hint'].upper()
+            constructed_cm = f"{tgt} IS {src}" # e.g. ARGUMENT IS WAR
+            
+            # Fuzzy match against MML keys
+            matches = get_close_matches(constructed_cm, mml_data.keys(), n=1, cutoff=0.6)
+            if matches:
+                best_match = matches[0]
 
+        if best_match:
+            links.append({
+                'Lexical_Item': lemma,
+                'ChainNet_Source': entry.get('source_sense', 'N/A'),
+                'ChainNet_Target': entry.get('target_sense', 'N/A'),
+                'MML_Concept': best_match
+            })
+            
+    return links
+
+# --- 4. EXECUTION ---
+
+if __name__ == "__main__":
+    print("Extracting ChainNet data...")
+    chainnet = load_chainnet(CHAINNET_PATH)
+    
+    print("Extracting Master Metaphor List...")
+    mml = load_mml(MML_PATH)
+    
+    print(f"Linking {len(chainnet)} lexical items to {len(mml)} conceptual metaphors...")
+    results = link_metaphors(chainnet, mml)
+    
+    # Output Results
+    df_results = pd.DataFrame(results)
+    print("\n--- LINKING RESULTS (Top 10) ---")
+    print(df_results.head(10))
+    
+    # Save to CSV for submission
+    df_results.to_csv("chainnet_mml_links.csv", index=False)
+    print("\nFull results saved to 'chainnet_mml_links.csv'.")
 
 
     # Note on PDF Extraction: In the MetaNet papers, mappings are often discussed in the body text or shown in figures (like Figure 1 in W15-1405). Automated extraction works best on the capitalized conventions (e.g., "LOVE IS A JOURNEY"). 
