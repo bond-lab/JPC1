@@ -1,0 +1,292 @@
+\documentclass[a4paper,11pt]{article}
+
+% --- 1. Typography & Layout ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}            % Palatino font (Professional & Clean)
+\usepackage{helvet}              % Helvetica for headers
+\usepackage{geometry}
+\geometry{
+    top=1in, bottom=1in, 
+    left=1in, right=1in
+}
+\usepackage{setspace}
+\setstretch{1.15}                % Comfortable line spacing
+\usepackage{parskip}             % Clean paragraph separation
+
+% --- 2. Colors ---
+\usepackage{xcolor}
+\definecolor{accentblue}{RGB}{0, 50, 100} % Dark blue for headers
+
+% --- 3. Section Styling ---
+\usepackage{titlesec}
+\titleformat{\section}
+  {\sffamily\Large\bfseries\color{accentblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\sffamily\large\bfseries\color{accentblue}}{\thesubsection}{1em}{}
+
+% --- 4. Tables & Code ---
+\usepackage{booktabs}            % Professional horizontal rules
+\usepackage{longtable}           % For multi-page tables
+\usepackage{listings}            % For code
+\usepackage{caption}
+\usepackage{array}               % For better column formatting
+
+% Code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{cleanstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{teal},
+    basicstyle=\ttfamily\scriptsize, 
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=t,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=10pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    frame=lines,                     
+    rulecolor=\color{codegray}
+}
+\lstset{style=cleanstyle}
+
+% --- 5. Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,        
+    urlcolor=accentblue,    
+    pdftitle={JSP3 Report},
+    pdfpagemode=FullScreen,
+}
+
+% =========================================
+% DOCUMENT CONTENT
+% =========================================
+
+\title{\sffamily\bfseries\huge JSP3: ChainNet Analysis\\[0.5em] \large Integrated Extraction of Metaphor and Metonymy}
+\author{\sffamily Vojtěch Mahdal \& Lea Karolína Komárková \\ 
+\small\texttt{vmahdal05@gmail.com, leakom11@gmail.com}}
+\date{\sffamily February 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent \textbf{Abstract:} This report details the extraction and integration of figurative language data from ChainNet. Specifically, we merge and analyze two distinct datasets: \textit{ChainNet-Metaphor} and \textit{ChainNet-Metonymy}. The objective is to unify these resources into a single computational framework, allowing for a direct comparison of lexical shifts across both figurative types. We provide a Python-based methodology for extracting, tagging, and combining these entries into a unified dataset.
+\end{abstract}
+
+\vspace{1em}
+\hrule
+\vspace{2em}
+
+\section{Introduction}
+The ChainNet project provides granular data on how word meanings shift via cognitive mechanisms. These shifts are primarily categorized into two types:
+\begin{itemize}
+    \item \textbf{Metaphor:} A mapping between two different conceptual domains (e.g., \textit{Time is Money}).
+    \item \textbf{Metonymy:} A mapping within a single conceptual domain (e.g., \textit{The Crown} standing for the Monarch).
+\end{itemize}
+
+Our task was to process the raw JSON data for both mechanisms and combine them into a unified dataset for analysis.
+
+\section{Data Structure}
+The source data consists of two JSON files:
+\begin{enumerate}
+    \item \texttt{chainnet\_metaphor.json}: Contains mappings where the sense shift crosses domain boundaries.
+    \item \texttt{chainnet\_metonymy.json}: Contains mappings where the sense shift is contiguous/associative.
+\end{enumerate}
+
+Both files follow a specific schema using \texttt{from\_sense} (source) and \texttt{to\_sense} (target) identifiers linked to WordNet.
+
+\section{Methodology & Code}
+We developed a Python script to ingest both files simultaneously. The script performs the following operations:
+\begin{enumerate}
+    \item **Path Auto-Correction:** Detects files even if extensions are hidden or doubled.
+    \item **Data Normalization:** Extracts the relevant fields (\texttt{wordform}, \texttt{from\_sense}, \texttt{to\_sense}) from the JSON structure.
+    \item **Tagging:** Adds a \texttt{Type} column to distinguish between Metaphor and Metonymy in the final output.
+    \item **Aggregation:** Merges both streams into a single CSV dataset.
+\end{enumerate}
+
+\begin{lstlisting}[language=Python, caption=Python Script for Integrating ChainNet Data]
+import pandas as pd
+import json
+import os 
+
+# --- 1. CONFIGURATION ---
+# Define the input files and their corresponding labels
+FILES_TO_LOAD = [
+    {"path": r"C:\Users\Mahdal\Desktop\Bond\chainnet_metaphor.json", "type": "Metaphor"},
+    {"path": r"C:\Users\Mahdal\Desktop\Bond\chainnet_metonymy.json", "type": "Metonymy"}
+]
+
+OUTPUT_FILE = "chainnet_combined_results.csv"
+
+# --- 2. DATA LOADING & PROCESSING ---
+
+def load_and_combine_chainnet(files_config):
+    """
+    Reads multiple ChainNet JSON files and combines them into one dataset.
+    """
+    combined_data = []
+    
+    for config in files_config:
+        filepath = config["path"]
+        data_type = config["type"]
+        
+        # Robust path checking (handles .json.json errors)
+        if not os.path.exists(filepath):
+            if os.path.exists(filepath + ".json"):
+                filepath += ".json"
+            else:
+                print(f"Warning: File not found: {filepath}")
+                continue
+                
+        print(f"Processing {data_type} from {os.path.basename(filepath)}...")
+        
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = json.load(f)
+                
+            # Extract the list of entries from the "content" key
+            items = content.get('content', [])
+            
+            for item in items:
+                # Create a clean entry row
+                entry = {
+                    'Word': item.get('wordform', 'N/A'),
+                    'Type': data_type,
+                    'Source_Sense': item.get('from_sense', 'N/A'),
+                    'Target_Sense': item.get('to_sense', 'N/A')
+                }
+                combined_data.append(entry)
+                
+            print(f"   -> Loaded {len(items)} entries.")
+            
+        except Exception as e:
+            print(f"   -> Error reading file: {e}")
+            
+    return combined_data
+
+# --- 3. EXECUTION ---
+
+if __name__ == "__main__":
+    print("--- STARTING CHAINNET INTEGRATION ---")
+    
+    # 1. Load and Combine
+    all_data = load_and_combine_chainnet(FILES_TO_LOAD)
+    
+    # 2. Output Results
+    if all_data:
+        df = pd.DataFrame(all_data)
+        
+        # Display large sample to console (50 items)
+        print("\n--- COMBINED DATASET SAMPLE ---")
+        print(df.head(50).to_string(index=False))
+        
+        # Save to CSV
+        output_dir = os.path.dirname(FILES_TO_LOAD[0]["path"])
+        output_path = os.path.join(output_dir, OUTPUT_FILE)
+        
+        df.to_csv(output_path, index=False)
+        print(f"\nSUCCESS: Saved {len(df)} rows to '{output_path}'")
+    else:
+        print("\nNo data found. Please check your JSON file locations.")
+\end{lstlisting}
+
+\section{Results: Extended Dataset}
+The table below presents a selection of 50 entries extracted from the combined dataset, illustrating the variety of metaphorical and metonymic shifts preserved in ChainNet.
+
+% TABLE CONFIGURATION
+\begin{longtable}{p{3.0cm} p{2.0cm} p{3.5cm} p{3.5cm}}
+\caption{Integrated ChainNet Data (50 Examples)} \\
+\toprule
+\textbf{\footnotesize Word} & \textbf{\footnotesize Type} & \textbf{\footnotesize Source Sense} & \textbf{\footnotesize Target Sense} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{\footnotesize Word} & \textbf{\footnotesize Type} & \textbf{\footnotesize Source Sense} & \textbf{\footnotesize Target Sense} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+% DATA CONTENT
+\footnotesize anchor & \footnotesize Metaphor & \footnotesize anchor\%1:06:00:: & \footnotesize anchor\%1:18:00:: \\
+\footnotesize apron & \footnotesize Metaphor & \footnotesize apron\%1:06:00:: & \footnotesize apron\%1:15:00:: \\
+\footnotesize bangle & \footnotesize Metaphor & \footnotesize bangle\%1:06:01:: & \footnotesize bangle\%1:06:00:: \\
+\footnotesize brake & \footnotesize Metonymy & \footnotesize brake\%1:20:02:: & \footnotesize brake\%1:14:00:: \\
+\footnotesize buckeye & \footnotesize Metonymy & \footnotesize buckeye\%1:20:00:: & \footnotesize buckeye\%1:18:00:: \\
+\footnotesize cloud & \footnotesize Metaphor & \footnotesize cloud\%1:17:00:: & \footnotesize cloud\%1:26:00:: \\
+\footnotesize cockpit & \footnotesize Metaphor & \footnotesize cockpit\%1:06:00:: & \footnotesize cockpit\%1:06:01:: \\
+\footnotesize delivery & \footnotesize Metaphor & \footnotesize delivery\%1:04:04:: & \footnotesize delivery\%1:04:03:: \\
+\footnotesize difficulty & \footnotesize Metonymy & \footnotesize difficulty\%1:09:02:: & \footnotesize difficulty\%1:07:00:: \\
+\footnotesize disappointment & \footnotesize Metonymy & \footnotesize disappointment\%1:12:00:: & \footnotesize disappointment\%1:04:00:: \\
+\footnotesize draftsman & \footnotesize Metaphor & \footnotesize draftsman\%1:18:00:: & \footnotesize draftsman\%1:18:01:: \\
+\footnotesize edition & \footnotesize Metonymy & \footnotesize edition\%1:10:02:: & \footnotesize edition\%1:14:00:: \\
+\footnotesize eighties & \footnotesize Metaphor & \footnotesize eighties\%1:28:00:: & \footnotesize eighties\%1:28:02:: \\
+\footnotesize elevation & \footnotesize Metaphor & \footnotesize elevation\%1:24:00:: & \footnotesize elevation\%1:11:00:: \\
+\footnotesize escutcheon & \footnotesize Metaphor & \footnotesize escutcheon\%1:06:00:: & \footnotesize escutcheon\%1:06:02:: \\
+\footnotesize hatchet & \footnotesize Metaphor & \footnotesize hatchet\%1:06:00:: & \footnotesize hatchet\%1:06:01:: \\
+\footnotesize hold & \footnotesize Metaphor & \footnotesize hold\%1:04:00:: & \footnotesize hold\%1:06:02:: \\
+\footnotesize identity & \footnotesize Metonymy & \footnotesize identity\%1:07:02:: & \footnotesize identity\%1:24:01:: \\
+\footnotesize javelin & \footnotesize Metonymy & \footnotesize javelin\%1:06:00:: & \footnotesize javelin\%1:11:00:: \\
+\footnotesize jihad & \footnotesize Metaphor & \footnotesize jihad\%1:04:01:: & \footnotesize jihad\%1:04:00:: \\
+\footnotesize kink & \footnotesize Metaphor & \footnotesize kink\%1:25:00:: & \footnotesize kink\%1:09:01:: \\
+\footnotesize mil & \footnotesize Metaphor & \footnotesize mil\%1:23:02:: & \footnotesize mil\%1:23:05:: \\
+\footnotesize money & \footnotesize Metonymy & \footnotesize money\%1:21:01:: & \footnotesize money\%1:21:00:: \\
+\footnotesize monitor & \footnotesize Metaphor & \footnotesize monitor\%1:18:01:: & \footnotesize monitor\%1:06:00:: \\
+\footnotesize mystery & \footnotesize Metonymy & \footnotesize mystery\%1:09:00:: & \footnotesize mystery\%1:10:00:: \\
+\footnotesize note & \footnotesize Metaphor & \footnotesize note\%1:10:04:: & \footnotesize note\%1:10:05:: \\
+\footnotesize octave & \footnotesize Metaphor & \footnotesize octave\%1:10:00:: & \footnotesize octave\%1:28:00:: \\
+\footnotesize ossification & \footnotesize Metaphor & \footnotesize ossification\%1:22:00:: & \footnotesize ossification\%1:22:02:: \\
+\footnotesize potato & \footnotesize Metonymy & \footnotesize potato\%1:13:00:: & \footnotesize potato\%1:20:00:: \\
+\footnotesize profundity & \footnotesize Metonymy & \footnotesize profundity\%1:07:01:: & \footnotesize profundity\%1:09:01:: \\
+\footnotesize queen & \footnotesize Metaphor & \footnotesize queen\%1:18:03:: & \footnotesize queen\%1:18:04:: \\
+\footnotesize receiver & \footnotesize Metonymy & \footnotesize receiver\%1:18:00:: & \footnotesize receiver\%1:18:02:: \\
+\footnotesize recital & \footnotesize Metonymy & \footnotesize recital\%1:10:04:: & \footnotesize recital\%1:10:01:: \\
+\footnotesize reserve & \footnotesize Metonymy & \footnotesize reserve\%1:21:00:: & \footnotesize reserve\%1:14:00:: \\
+\footnotesize rhetoric & \footnotesize Metaphor & \footnotesize rhetoric\%1:10:00:: & \footnotesize rhetoric\%1:10:02:: \\
+\footnotesize separation & \footnotesize Metonymy & \footnotesize separation\%1:11:00:: & \footnotesize separation\%1:15:00:: \\
+\footnotesize sequel & \footnotesize Metaphor & \footnotesize sequel\%1:10:00:: & \footnotesize sequel\%1:11:00:: \\
+\footnotesize shovel & \footnotesize Metonymy & \footnotesize shovel\%1:06:00:: & \footnotesize shovel\%1:23:00:: \\
+\footnotesize silver & \footnotesize Metonymy & \footnotesize silver\%1:27:00:: & \footnotesize silver\%1:06:01:: \\
+\footnotesize sitting & \footnotesize Metonymy & \footnotesize sitting\%1:04:00:: & \footnotesize sitting\%1:14:00:: \\
+\footnotesize smell & \footnotesize Metonymy & \footnotesize smell\%1:07:00:: & \footnotesize smell\%1:09:02:: \\
+\footnotesize stretch & \footnotesize Metonymy & \footnotesize stretch\%1:04:01:: & \footnotesize stretch\%1:04:00:: \\
+\footnotesize string & \footnotesize Metonymy & \footnotesize string\%1:06:00:: & \footnotesize string\%1:06:03:: \\
+\footnotesize sucker & \footnotesize Metonymy & \footnotesize sucker\%1:18:00:: & \footnotesize sucker\%1:05:02:: \\
+\footnotesize suggestion & \footnotesize Metaphor & \footnotesize suggestion\%1:10:00:: & \footnotesize suggestion\%1:10:01:: \\
+\footnotesize tea & \footnotesize Metonymy & \footnotesize tea\%1:13:00:: & \footnotesize tea\%1:20:00:: \\
+\footnotesize throttle & \footnotesize Metonymy & \footnotesize throttle\%1:06:01:: & \footnotesize throttle\%1:06:00:: \\
+\footnotesize title & \footnotesize Metaphor & \footnotesize title\%1:10:00:: & \footnotesize title\%1:10:02:: \\
+\footnotesize traffic & \footnotesize Metaphor & \footnotesize traffic\%1:10:00:: & \footnotesize traffic\%1:04:02:: \\
+\footnotesize zoom & \footnotesize Metonymy & \footnotesize zoom\%1:04:00:: & \footnotesize zoom\%1:11:00:: \\
+\bottomrule
+\end{longtable}
+
+\section{Discussion}
+By excluding external conceptual categories (MML) and focusing purely on the internal structure of ChainNet, we reveal the specific "sense-to-sense" architecture of the database. 
+
+Notice how words like \textbf{"money"} and \textbf{"hold"} appear in the dataset with distinct cognitive shifts:
+\begin{itemize}
+    \item \textbf{Metonymy (Money):} Shifts from the abstract currency (money\%1:21:01) to the specific medium of exchange (money\%1:21:00).
+    \item \textbf{Metaphor (Hold):} Shifts from the physical act (hold\%1:04:00) to a container/storage sense (hold\%1:06:02).
+\end{itemize}
+
+This integrated view confirms that polysemy in ChainNet is modeled not just as a random collection of meanings, but as a structured network of cognitive shifts.
+
+\section{Conclusions}
+We have successfully extracted and merged the metaphor and metonymy datasets. The resulting CSV file serves as a foundation for training classifiers that can distinguish between these two fundamental types of figurative language based solely on WordNet sense keys.
+
+\end{document}
