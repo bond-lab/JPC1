@@ -4,9 +4,7 @@ import os
 from difflib import get_close_matches
 
 # --- 1. CONFIGURATION ---
-# Path to the JSON file you want to process
 FILE_TO_PROCESS = r"C:\Users\Mahdal\Desktop\Bond\chainnet_metonymy.json"
-# MML_PATH should point to a non-existent file to force the use of the internal database
 MML_PATH = r"C:\Users\Mahdal\Desktop\Bond\master_metaphor_list.txt"
 
 # --- 2. DATA LOADING ---
@@ -17,7 +15,6 @@ def load_chainnet(filepath):
         print(f"❌ ERROR: File not found: {filepath}")
         return []
 
-    # Determine type based on the filename
     file_name = os.path.basename(filepath).lower()
     default_type = "metonymy" if "metonymy" in file_name else "metaphor"
 
@@ -27,11 +24,9 @@ def load_chainnet(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
             
-        # Data is either in 'content' key or the list itself
         items = data.get('content', []) if isinstance(data, dict) else data
         
         for item in items:
-            # Extract word and ID from your specific keys
             lemma = item.get('wordform', 'unknown')
             sense_id = item.get('from_sense', 'N/A')
 
@@ -49,7 +44,6 @@ def load_chainnet(filepath):
     return chainnet_entries
 
 def load_mml(filepath):
-    # Internal theory database (Master Metaphor List)
     backup_mml = {
         'ARGUMENT IS WAR': ['attack', 'defend', 'strategy', 'win', 'target', 'force', 'shot', 'twin', 'victory', 'fight'],
         'IDEAS ARE FOOD': ['digest', 'swallow', 'raw', 'bitter', 'cook', 'baked', 'spoon-feed'],
@@ -67,7 +61,6 @@ def link_metaphors(chainnet_data, mml_data):
     links = []
     print(f"   -> Searching for matches in MML theory...")
 
-    # Flatten the MML word list for faster searching
     all_mml_words = {}
     for cm, words in mml_data.items():
         for w in words:
@@ -77,10 +70,8 @@ def link_metaphors(chainnet_data, mml_data):
         lemma = entry['lemma']
         best_match = None
         
-        # Direct match
         if lemma in all_mml_words:
             best_match = all_mml_words[lemma]
-        # Fuzzy match
         else:
             match = get_close_matches(lemma, list(all_mml_words.keys()), n=1, cutoff=0.8)
             if match:
@@ -99,7 +90,7 @@ def link_metaphors(chainnet_data, mml_data):
 # --- 4. EXECUTION ---
 
 if __name__ == "__main__":
-    print("\n--- STARTING MAPPER (v4) ---")
+    print("\n--- STARTING MAPPER (v4 - Full Results) ---")
     
     chainnet = load_chainnet(FILE_TO_PROCESS)
     mml = load_mml(MML_PATH)
@@ -111,15 +102,17 @@ if __name__ == "__main__":
         
         if results:
             df = pd.DataFrame(results)
-            # Remove duplicates if the same word/ID maps to the same concept
             df = df.drop_duplicates()
             
             print(f"\n✅ SUCCESS! Found {len(df)} unique links.")
-            print("\n--- SAMPLE RESULTS ---")
-            print(df.head(15).to_string(index=False))
+            print("\n--- ALL MATCHING SAMPLES ---")
+            
+            # This ensures that ALL rows are printed to the console
+            # without the head(15) limit
+            print(df.to_string(index=False))
             
             output_path = os.path.join(os.path.dirname(FILE_TO_PROCESS), "mapping_results_final.csv")
             df.to_csv(output_path, index=False, encoding='utf-8-sig')
-            print(f"\n💾 Saved to: {output_path}")
+            print(f"\n💾 Total of {len(df)} rows saved to: {output_path}")
         else:
             print("\n⚠️ No matches found.")
