@@ -133,71 +133,131 @@ The raw data is stored in a JSON file within the project directory. Below is a s
 The following Python script loads the external JSON file, applies the mapping logic against the MML knowledge base, and exports the results to a CSV file for analysis.
 
 \begin{lstlisting}[language=Python, caption={Python Script for Loading and Linking Data}]
+import pandas as pd
 import json
-import csv
-import os
+import os 
+from difflib import get_close_matches
 
-# --- CONFIGURATION ---
-INPUT_FILE = 'chainnet_data.json'
-OUTPUT_FILE = 'chainnet_mml_links.csv'
+# --- 1. CONFIGURATION ---
+# Path to the JSON file you want to process
+FILE_TO_PROCESS = r"C:\Users\Mahdal\Desktop\Bond\chainnet_metonymy.json"
+# MML_PATH should point to a non-existent file to force the use of the internal database
+MML_PATH = r"C:\Users\Mahdal\Desktop\Bond\master_metaphor_list.txt"
 
-# --- KNOWLEDGE BASE (MML Mappings) ---
-# A dictionary mapping lexical items to Conceptual Metaphors
-MML_KNOWLEDGE_BASE = {
-    "can": "CONTAINERS ARE OBJECTS",
-    "diary": "LIFE IS A BOOK",
-    "ghetto": "SOCIETY IS A CONTAINER",
-    "individual": "THE SELF IS A PERSON",
-    "insult": "ARGUMENT IS WAR",
-    "patient": "ROLES ARE STATES",
-    "company": "INSTITUTIONS ARE BUILDINGS",
-    "leaf": "IDEAS ARE PLANTS",
-    "mosaic": "COMPLEXITY IS A MOSAIC",
-    "peacemaker": "MEDIATION IS ACTION",
-    # ... (Full knowledge base omitted for brevity)
-}
+# --- 2. DATA LOADING ---
 
-def load_data(filename):
-    """Loads raw data from the external JSON file."""
-    if not os.path.exists(filename):
-        print(f"Error: File '{filename}' not found.")
+def load_chainnet(filepath):
+    chainnet_entries = []
+    if not os.path.exists(filepath):
+        print(f"❌ ERROR: File not found: {filepath}")
         return []
-    
-    with open(filename, 'r', encoding='utf-8') as f:
-        return json.load(f)
 
-def process_data(data):
-    """Maps raw ChainNet data to MML concepts."""
-    links = []
-    for entry in data:
-        word = entry.get('wordform')
-        # Look up the concept, default to UNCATEGORIZED if not found
-        mml_cat = MML_KNOWLEDGE_BASE.get(word, "UNCATEGORIZED")
+    # Determine type based on the filename
+    file_name = os.path.basename(filepath).lower()
+    default_type = "metonymy" if "metonymy" in file_name else "metaphor"
+
+    print(f"   -> Reading file: {os.path.basename(filepath)} (Type: {default_type})")
+
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        # Data is either in 'content' key or the list itself
+        items = data.get('content', []) if isinstance(data, dict) else data
         
-        links.append({
-            'Lexical_Item': word,
-            'WordNet_Source': entry.get('from_sense'),
-            'WordNet_Target': entry.get('to_sense'),
-            'MML_Concept': mml_cat
-        })
+        for item in items:
+            # Extract word and ID from your specific keys
+            lemma = item.get('wordform', 'unknown')
+            sense_id = item.get('from_sense', 'N/A')
+
+            chainnet_entries.append({
+                'lemma': str(lemma).strip().lower(),
+                'type': default_type,
+                'sense_id': sense_id
+            })
+        
+        print(f"   -> Loaded {len(chainnet_entries)} entries.")
+                    
+    except Exception as e:
+        print(f"   ❌ Error reading JSON: {e}")
+
+    return chainnet_entries
+
+def load_mml(filepath):
+    # Internal theory database (Master Metaphor List)
+    backup_mml = {
+        'ARGUMENT IS WAR': ['attack', 'defend', 'strategy', 'win', 'target', 'force', 'shot', 'twin', 'victory', 'fight'],
+        'IDEAS ARE FOOD': ['digest', 'swallow', 'raw', 'bitter', 'cook', 'baked', 'spoon-feed'],
+        'UNDERSTANDING IS SEEING': ['see', 'clear', 'focus', 'view', 'light', 'blight', 'vision', 'perspective'],
+        'TIME IS MONEY': ['spend', 'waste', 'cost', 'invest', 'save', 'budget', 'borrow'],
+        'LIFE IS A JOURNEY': ['path', 'road', 'step', 'way', 'arrival', 'crossroads', 'guide'],
+        'CONTROL IS UP': ['rise', 'high', 'top', 'peak', 'superior', 'over', 'control'],
+        'SOCIETY IS A BODY': ['head', 'heart', 'arm', 'member', 'organ', 'shoulder', 'brain']
+    }
+    return backup_mml
+
+# --- 3. LINKING LOGIC ---
+
+def link_metaphors(chainnet_data, mml_data):
+    links = []
+    print(f"   -> Searching for matches in MML theory...")
+
+    # Flatten the MML word list for faster searching
+    all_mml_words = {}
+    for cm, words in mml_data.items():
+        for w in words:
+            all_mml_words[w] = cm
+
+    for entry in chainnet_data:
+        lemma = entry['lemma']
+        best_match = None
+        
+        # Direct match
+        if lemma in all_mml_words:
+            best_match = all_mml_words[lemma]
+        # Fuzzy match
+        else:
+            match = get_close_matches(lemma, list(all_mml_words.keys()), n=1, cutoff=0.8)
+            if match:
+                best_match = all_mml_words[match[0]]
+
+        if best_match:
+            links.append({
+                'Word': lemma,
+                'Type': entry['type'],
+                'MML_Concept': best_match,
+                'Sense_ID': entry['sense_id']
+            })
+            
     return links
 
+# --- 4. EXECUTION ---
+
 if __name__ == "__main__":
-    print(f"Loading data from {INPUT_FILE}...")
-    raw_data = load_data(INPUT_FILE)
+    print("\n--- STARTING MAPPER (v4) ---")
     
-    if raw_data:
-        print(f"Processing {len(raw_data)} items...")
-        final_links = process_data(raw_data)
+    chainnet = load_chainnet(FILE_TO_PROCESS)
+    mml = load_mml(MML_PATH)
+    
+    if not chainnet:
+        print("❌ No data to load.")
+    else:
+        results = link_metaphors(chainnet, mml)
         
-        # Export to CSV
-        keys = final_links[0].keys()
-        with open(OUTPUT_FILE, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, keys)
-            writer.writeheader()
-            writer.writerows(final_links)
+        if results:
+            df = pd.DataFrame(results)
+            # Remove duplicates if the same word/ID maps to the same concept
+            df = df.drop_duplicates()
             
-        print(f"Success! Results saved to '{OUTPUT_FILE}'.")
+            print(f"\n✅ SUCCESS! Found {len(df)} unique links.")
+            print("\n--- SAMPLE RESULTS ---")
+            print(df.head(15).to_string(index=False))
+            
+            output_path = os.path.join(os.path.dirname(FILE_TO_PROCESS), "mapping_results_final.csv")
+            df.to_csv(output_path, index=False, encoding='utf-8-sig')
+            print(f"\n💾 Saved to: {output_path}")
+        else:
+            print("\n⚠️ No matches found.")
 \end{lstlisting}
 
 \section{Results}
@@ -337,5 +397,6 @@ The research "mentioned" in the Master Metaphor List has not merely continued; i
 
 \section{Self-Reflection}
 We acknowledge the delays in the initial consultation phase of this project. The limited scope of the preliminary extraction was due to an underestimation of the linking complexity, which we have now rectified with the computational approach detailed above. We appreciate the opportunity to correct the methodology and present the complete findings.
+
 
 \end{document}
