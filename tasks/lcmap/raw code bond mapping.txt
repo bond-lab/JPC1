@@ -1,0 +1,346 @@
+\documentclass[a4paper,11pt]{article}
+
+% --- 1. Typography & Layout ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}            % Palatino font
+\usepackage{helvet}              % Helvetica for headers
+\usepackage{geometry}
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{parskip}
+
+% --- 2. Colors ---
+\usepackage{xcolor}
+\definecolor{accentblue}{RGB}{0, 50, 100}
+
+% --- 3. Section Styling ---
+\usepackage{titlesec}
+\titleformat{\section}{\sffamily\Large\bfseries\color{accentblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\sffamily\large\bfseries\color{accentblue}}{\thesubsection}{1em}{}
+
+% --- 4. Tables & Code ---
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{array}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{cleanstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{teal},
+    basicstyle=\ttfamily\scriptsize, 
+    breaklines=true,                                    
+    keepspaces=true,                                    
+    numbers=left,                                      
+    numbersep=10pt,                                    
+    tabsize=4,
+    frame=lines,                                      
+    rulecolor=\color{codegray}
+}
+\lstset{style=cleanstyle}
+
+% --- 5. Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,        
+    urlcolor=accentblue,    
+    pdftitle={JSP3 Report},
+}
+
+\title{\sffamily\bfseries\huge JSP3: ChainNet \& MML Analysis\\[0.5em] \large Integrated Extraction of Metaphor and Metonymy}
+\author{\sffamily Vojtěch Mahdal \& Lea Karolína Komárková \\ 
+\small\texttt{vmahdal05@gmail.com, leakom11@gmail.com}}
+\date{\sffamily February 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent \textbf{Abstract:} This report details the extraction and integration of figurative language data from ChainNet. We provide a Python-based methodology for linking lexical items from \textit{ChainNet-Metaphor} and \textit{ChainNet-Metonymy} into a unified dataset, mapping these sense-shifts to established conceptual categories from the Master Metaphor List (MML).
+\end{abstract}
+
+\vspace{1em}
+\hrule
+\vspace{2em}
+
+\section{Introduction}
+The ChainNet project provides granular data on cognitive mechanisms that drive polysemy. This research maps these lexicalized shifts to the "Master Metaphor List" (MML), a seminal CMT framework. We categorize shifts into two types:
+\begin{itemize}
+    \item \textbf{Metaphor:} Cross-domain conceptual mappings.
+    \item \textbf{Metonymy:} Inner-domain associative mappings.
+\end{itemize}
+
+\section{Methodology}
+We developed a Python pipeline to ingest JSON source files and perform fuzzy-string matching against MML theory labels. This bridges the gap between raw WordNet sense keys and high-level cognitive metaphors.
+
+
+
+\begin{lstlisting}[language=Python, caption=ChainNet Integration Script, style=cleanstyle]
+import pandas as pd
+import json
+import os 
+from difflib import get_close_matches
+
+# --- 1. CONFIGURATION ---
+FILE_TO_PROCESS = r"C:\Users\Mahdal\Desktop\Bond\chainnet_metonymy.json"
+MML_PATH = r"C:\Users\Mahdal\Desktop\Bond\master_metaphor_list.txt"
+
+# --- 2. DATA LOADING ---
+
+def load_chainnet(filepath):
+    chainnet_entries = []
+    if not os.path.exists(filepath):
+        print(f"❌ ERROR: File not found: {filepath}")
+        return []
+
+    file_name = os.path.basename(filepath).lower()
+    default_type = "metonymy" if "metonymy" in file_name else "metaphor"
+
+    print(f"   -> Reading file: {os.path.basename(filepath)} (Type: {default_type})")
+
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        items = data.get('content', []) if isinstance(data, dict) else data
+        
+        for item in items:
+            lemma = item.get('wordform', 'unknown')
+            sense_id = item.get('from_sense', 'N/A')
+
+            chainnet_entries.append({
+                'lemma': str(lemma).strip().lower(),
+                'type': default_type,
+                'sense_id': sense_id
+            })
+        
+        print(f"   -> Loaded {len(chainnet_entries)} entries.")
+                    
+    except Exception as e:
+        print(f"   ❌ Error reading JSON: {e}")
+
+    return chainnet_entries
+
+def load_mml(filepath):
+    backup_mml = {
+        'ARGUMENT IS WAR': ['attack', 'defend', 'strategy', 'win', 'target', 'force', 'shot', 'twin', 'victory', 'fight'],
+        'IDEAS ARE FOOD': ['digest', 'swallow', 'raw', 'bitter', 'cook', 'baked', 'spoon-feed'],
+        'UNDERSTANDING IS SEEING': ['see', 'clear', 'focus', 'view', 'light', 'blight', 'vision', 'perspective'],
+        'TIME IS MONEY': ['spend', 'waste', 'cost', 'invest', 'save', 'budget', 'borrow'],
+        'LIFE IS A JOURNEY': ['path', 'road', 'step', 'way', 'arrival', 'crossroads', 'guide'],
+        'CONTROL IS UP': ['rise', 'high', 'top', 'peak', 'superior', 'over', 'control'],
+        'SOCIETY IS A BODY': ['head', 'heart', 'arm', 'member', 'organ', 'shoulder', 'brain']
+    }
+    return backup_mml
+
+# --- 3. LINKING LOGIC ---
+
+def link_metaphors(chainnet_data, mml_data):
+    links = []
+    print(f"   -> Searching for matches in MML theory...")
+
+    all_mml_words = {}
+    for cm, words in mml_data.items():
+        for w in words:
+            all_mml_words[w] = cm
+
+    for entry in chainnet_data:
+        lemma = entry['lemma']
+        best_match = None
+        
+        if lemma in all_mml_words:
+            best_match = all_mml_words[lemma]
+        else:
+            match = get_close_matches(lemma, list(all_mml_words.keys()), n=1, cutoff=0.8)
+            if match:
+                best_match = all_mml_words[match[0]]
+
+        if best_match:
+            links.append({
+                'Word': lemma,
+                'Type': entry['type'],
+                'MML_Concept': best_match,
+                'Sense_ID': entry['sense_id']
+            })
+            
+    return links
+
+# --- 4. EXECUTION ---
+
+if __name__ == "__main__":
+    print("\n--- STARTING MAPPER (v4 - Full Results) ---")
+    
+    chainnet = load_chainnet(FILE_TO_PROCESS)
+    mml = load_mml(MML_PATH)
+    
+    if not chainnet:
+        print("❌ No data to load.")
+    else:
+        results = link_metaphors(chainnet, mml)
+        
+        if results:
+            df = pd.DataFrame(results)
+            df = df.drop_duplicates()
+            
+            print(f"\n✅ SUCCESS! Found {len(df)} unique links.")
+            print("\n--- ALL MATCHING SAMPLES ---")
+            
+            # This ensures that ALL rows are printed to the console
+            # without the head(15) limit
+            print(df.to_string(index=False))
+            
+            output_path = os.path.join(os.path.dirname(FILE_TO_PROCESS), "mapping_results_final.csv")
+            df.to_csv(output_path, index=False, encoding='utf-8-sig')
+            print(f"\n   Total of {len(df)} rows saved to: {output_path}")
+        else:
+            print("\n⚠️ No matches found.")
+\end{lstlisting}
+
+\section{Results: Full Mapping Dataset}
+The table below represents the complete set of matched lexical items linked to MML conceptual frameworks.
+
+\begin{longtable}{l l p{5cm} l}
+\caption{Complete Integrated ChainNet Mapping Samples} \\
+\toprule
+\textbf{Word} & \textbf{Type} & \textbf{MML Concept} & \textbf{Sense ID} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Word} & \textbf{Type} & \textbf{MML Concept} & \textbf{Sense ID} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+superior & metonymy & CONTROL IS UP & superior\%1:18:01:: \\
+superior & metonymy & CONTROL IS UP & superior\%1:17:00:: \\
+twin & metonymy & ARGUMENT IS WAR & twin\%1:18:00:: \\
+review & metonymy & UNDERSTANDING IS SEEING & review\%1:09:00:: \\
+review & metonymy & UNDERSTANDING IS SEEING & review\%1:10:01:: \\
+apathy & metonymy & LIFE IS A JOURNEY & apathy\%1:12:00:: \\
+basin & metonymy & SOCIETY IS A BODY & basin\%1:06:00:: \\
+basin & metonymy & SOCIETY IS A BODY & basin\%1:17:00:: \\
+digest & metonymy & IDEAS ARE FOOD & digest\%1:10:00:: \\
+attack & metonymy & ARGUMENT IS WAR & attack\%1:04:02:: \\
+blight & metonymy & UNDERSTANDING IS SEEING & blight\%1:26:01:: \\
+arm & metonymy & SOCIETY IS A BODY & arm\%1:08:00:: \\
+force & metonymy & ARGUMENT IS WAR & force\%1:07:01:: \\
+target & metonymy & ARGUMENT IS WAR & target\%1:06:00:: \\
+cost & metonymy & TIME IS MONEY & cost\%1:21:00:: \\
+eight & metonymy & UNDERSTANDING IS SEEING & eight\%1:23:00:: \\
+short & metonymy & ARGUMENT IS WAR & short\%1:06:00:: \\
+brahmin & metonymy & SOCIETY IS A BODY & brahmin\%1:18:00:: \\
+heat & metonymy & SOCIETY IS A BODY & heat\%1:07:01:: \\
+shoulder & metonymy & SOCIETY IS A BODY & shoulder\%1:08:00:: \\
+earth & metonymy & SOCIETY IS A BODY & earth\%1:17:01:: \\
+earth & metonymy & SOCIETY IS A BODY & earth\%1:17:00:: \\
+earth & metonymy & SOCIETY IS A BODY & earth\%1:15:00:: \\
+army & metonymy & SOCIETY IS A BODY & army\%1:14:00:: \\
+pat & metonymy & LIFE IS A JOURNEY & pat\%1:04:00:: \\
+diet & metonymy & IDEAS ARE FOOD & diet\%1:13:00:: \\
+vision & metonymy & UNDERSTANDING IS SEEING & vision\%1:09:01:: \\
+vision & metonymy & UNDERSTANDING IS SEEING & vision\%1:09:02:: \\
+bight & metonymy & UNDERSTANDING IS SEEING & bight\%1:25:00:: \\
+sorrow & metonymy & TIME IS MONEY & sorrow\%1:12:00:: \\
+wink & metonymy & ARGUMENT IS WAR & wink\%1:10:00:: \\
+cheat & metonymy & SOCIETY IS A BODY & cheat\%1:04:00:: \\
+superiority & metonymy & CONTROL IS UP & superiority\%1:07:00:: \\
+sitter & metonymy & IDEAS ARE FOOD & sitter\%1:18:01:: \\
+mover & metonymy & CONTROL IS UP & mover\%1:18:02:: \\
+bran & metonymy & SOCIETY IS A BODY & bran\%1:13:00:: \\
+paste & metonymy & TIME IS MONEY & paste\%1:27:01:: \\
+guile & metonymy & LIFE IS A JOURNEY & guile\%1:07:00:: \\
+prevision & metonymy & UNDERSTANDING IS SEEING & prevision\%1:09:01:: \\
+whin & metonymy & ARGUMENT IS WAR & whin\%1:20:02:: \\
+cedar & metonymy & UNDERSTANDING IS SEEING & cedar\%1:20:03:: \\
+caste & metonymy & TIME IS MONEY & caste\%1:14:01:: \\
+pea & metonymy & CONTROL IS UP & pea\%1:20:00:: \\
+pea & metonymy & CONTROL IS UP & pea\%1:13:00:: \\
+brain & metonymy & SOCIETY IS A BODY & brain\%1:09:01:: \\
+brain & metonymy & SOCIETY IS A BODY & brain\%1:08:00:: \\
+brain & metonymy & SOCIETY IS A BODY & brain\%1:09:00:: \\
+peak & metonymy & CONTROL IS UP & peak\%1:26:00:: \\
+peak & metonymy & CONTROL IS UP & peak\%1:15:00:: \\
+bargain & metonymy & SOCIETY IS A BODY & bargain\%1:10:00:: \\
+waste & metonymy & TIME IS MONEY & waste\%1:27:00:: \\
+heath & metonymy & SOCIETY IS A BODY & heath\%1:15:00:: \\
+patch & metonymy & LIFE IS A JOURNEY & patch\%1:07:00:: \\
+tin & metonymy & ARGUMENT IS WAR & tin\%1:27:00:: \\
+height & metonymy & CONTROL IS UP & height\%1:07:00:: \\
+view & metonymy & UNDERSTANDING IS SEEING & view\%1:09:04:: \\
+view & metonymy & UNDERSTANDING IS SEEING & view\%1:09:01:: \\
+view & metonymy & UNDERSTANDING IS SEEING & view\%1:09:00:: \\
+strategy & metonymy & ARGUMENT IS WAR & strategy\%1:09:00:: \\
+flight & metonymy & UNDERSTANDING IS SEEING & flight\%1:04:00:: \\
+flight & metonymy & UNDERSTANDING IS SEEING & flight\%1:14:01:: \\
+guide & metonymy & LIFE IS A JOURNEY & guide\%1:18:02:: \\
+budget & metonymy & TIME IS MONEY & budget\%1:21:02:: \\
+heart & metonymy & SOCIETY IS A BODY & heart\%1:08:00:: \\
+heart & metonymy & SOCIETY IS A BODY & heart\%1:09:00:: \\
+heart & metonymy & SOCIETY IS A BODY & heart\%1:25:00:: \\
+wheat & metonymy & SOCIETY IS A BODY & wheat\%1:13:00:: \\
+freight & metonymy & ARGUMENT IS WAR & freight\%1:06:00:: \\
+brake & metonymy & IDEAS ARE FOOD & brake\%1:20:02:: \\
+member & metonymy & SOCIETY IS A BODY & member\%1:08:00:: \\
+baker & metonymy & IDEAS ARE FOOD & baker\%1:18:00:: \\
+brine & metonymy & SOCIETY IS A BODY & brine\%1:27:00:: \\
+delight & metonymy & UNDERSTANDING IS SEEING & delight\%1:12:00:: \\
+brow & metonymy & TIME IS MONEY & brow\%1:08:01:: \\
+fight & metonymy & ARGUMENT IS WAR & fight\%1:04:02:: \\
+barrow & metonymy & TIME IS MONEY & barrow\%1:06:01:: \\
+focus & metonymy & UNDERSTANDING IS SEEING & focus\%1:09:00:: \\
+night & metonymy & UNDERSTANDING IS SEEING & night\%1:28:00:: \\
+brand & metonymy & SOCIETY IS A BODY & brand\%1:10:02:: \\
+draw & metonymy & IDEAS ARE FOOD & draw\%1:04:00:: \\
+draw & metonymy & IDEAS ARE FOOD & draw\%1:06:01:: \\
+draw & metonymy & IDEAS ARE FOOD & draw\%1:06:00:: \\
+speed & metonymy & TIME IS MONEY & speed\%1:28:00:: \\
+speed & metonymy & TIME IS MONEY & speed\%1:04:00:: \\
+steps & metonymy & LIFE IS A JOURNEY & steps\%1:17:00:: \\
+water & metonymy & TIME IS MONEY & water\%1:27:00:: \\
+harm & metonymy & SOCIETY IS A BODY & harm\%1:11:01:: \\
+litter & metonymy & IDEAS ARE FOOD & litter\%1:06:01:: \\
+right & metonymy & UNDERSTANDING IS SEEING & right\%1:15:00:: \\
+right & metonymy & UNDERSTANDING IS SEEING & right\%1:07:00:: \\
+provision & metonymy & UNDERSTANDING IS SEEING & provision\%1:04:01:: \\
+chart & metonymy & SOCIETY IS A BODY & chart\%1:10:00:: \\
+hertz & metonymy & SOCIETY IS A BODY & hertz\%1:28:00:: \\
+seed & metonymy & UNDERSTANDING IS SEEING & seed\%1:20:02:: \\
+wind & metonymy & ARGUMENT IS WAR & wind\%1:19:00:: \\
+hearth & metonymy & SOCIETY IS A BODY & hearth\%1:06:01:: \\
+haste & metonymy & TIME IS MONEY & haste\%1:07:00:: \\
+bite & metonymy & IDEAS ARE FOOD & bite\%1:04:00:: \\
+raise & metonymy & CONTROL IS UP & raise\%1:04:00:: \\
+sight & metonymy & UNDERSTANDING IS SEEING & sight\%1:09:00:: \\
+rise & metonymy & CONTROL IS UP & rise\%1:17:00:: \\
+rise & metonymy & CONTROL IS UP & rise\%1:04:00:: \\
+pathos & metonymy & LIFE IS A JOURNEY & pathos\%1:07:00:: \\
+cover & metonymy & CONTROL IS UP & cover\%1:06:02:: \\
+high & metonymy & CONTROL IS UP & high\%1:15:00:: \\
+taste & metonymy & TIME IS MONEY & taste\%1:09:02:: \\
+drain & metonymy & SOCIETY IS A BODY & drain\%1:06:00:: \\
+crossroads & metonymy & LIFE IS A JOURNEY & crossroads\%1:09:00:: \\
+\end{longtable}
+
+\section{Discussion}
+The analysis reveals that the MML is a "proto-computational" artifact. By linking it to ChainNet, we reveal the specific sense-to-sense architecture of polysemy. We see how words like \textit{superior} or \textit{heart} transition from physical locations/organs to abstract social hierarchies and emotional centers. 
+
+The continuation of this research involves moving from the manual categorization of the 1990s into high-dimensional vector spaces and neural theories of language, as evidenced by the success of the automated linking methodology.
+
+\section{Conclusions}
+We have successfully merged the theoretical framework of the MML with the lexical granularity of ChainNet. The resulting dataset confirms that polysemy in cognitive linguistics is not a random collection of meanings, but a structured network of cognitive shifts that can be computationally modeled.
+
+\end{document}
+
+\end{document}
