@@ -1,0 +1,58 @@
+Preparing components
+Found lexicon file: omw-en_1.4_cn.xml
+Lexicon 'omw-en:1.4.cn' loaded
+Loaded CoreLex map with 82115 entries
+----------------------------------------
+WORD    SOURCE TYPE     TARGET TYPE
+----------------------------------------
+chestnut        NATURAL_BODY    PSYCHOLOGICAL_FEATURE
+  Source: edible nut of any of various chestnut trees of the genus Castanea
+  Target: a small horny callus on the inner surface of a horse's leg
+
+star    NATURAL_BODY    FORM
+  Source: any celestial body visible (as a point of light) from the Earth at night
+  Target: a plane figure with 5 or more points; often used as an emblem
+
+mouth   PART    SPACE
+  Source: the opening through which food is taken in and vocalizations emerge
+  Target: an opening that resembles a mouth (as of a cave or a gorge)
+
+mouth   PART    PHYSICAL_OBJECT
+  Source: the opening through which food is taken in and vocalizations emerge
+  Target: the point where a stream issues into a larger body of water
+
+mouth   PART    ARTIFACT
+  Source: the opening through which food is taken in and vocalizations emerge
+  Target: the opening of a jar or bottle
+
+arm     PART    ARTIFACT
+  Source: a human limb; technically the part of the superior limb between the shoulder and the elbow but commonly used to refer to the whole superior limb
+  Target: any projection that is thought to resemble a human arm
+
+leg     PART    ARTIFACT
+  Source: a human limb; commonly used to refer to a whole limb but technically only the part of the limb between the knee and ankle
+  Target: one of the supports for a piece of furniture
+
+dog     ANIMAL  HUMAN
+  Source: a member of the genus Canis (probably descended from the common wolf) that has been domesticated by man since prehistoric times; occurs in many breeds   
+  Target: informal term for a man
+
+rat     ANIMAL  ARTIFACT
+  Source: any of various long-tailed rodents similar to but larger than a mouse
+  Target: a pad (usually made of hair) worn as part of a woman's coiffure
+
+snake   NATURAL_BODY    PHYSICAL_OBJECT
+  Source: limbless scaly elongate reptile; some are venomous
+  Target: something long, thin, and flexible that resembles a snake
+
+hawk    ANIMAL  HUMAN
+  Source: diurnal bird of prey typically having short rounded wings and a long tail
+  Target: an advocate of an aggressive policy on foreign relations
+
+Analysis
+Total shifts: 11
+PART -> ARTIFACT: 3
+ANIMAL -> HUMAN: 2
+NATURAL_BODY -> PSYCHOLOGICAL_FEATURE: 1
+NATURAL_BODY -> FORM: 1
+PART -> SPACE: 1

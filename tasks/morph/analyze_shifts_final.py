@@ -1,151 +1,146 @@
 import wn
-import nltk
-from nltk.corpus import wordnet as nltk_wn
 import json
 import os
 import sys
-import re
+from collections import Counter
 
-# Make sure local files are visible
 sys.path.append(os.getcwd())
 
-
 def setup_resources():
-    print("--- Setting up resources ---")
+    print("Preparing components")
 
-    # Try to locate the custom WordNet file
     candidate_files = [
         "omw-en_1.4_cn.xml",
         "data/omw-en_1.4_cn.xml",
-        "omw-en:1.4_cn.xml.gz"
+        "omw-en_1.4_cn.xml.gz"
     ]
 
     custom_wn_file = None
-    for fname in candidate_files:
-        if os.path.exists(fname):
-            custom_wn_file = fname
-            print(f"Found WordNet file: {fname}")
+    for f in candidate_files:
+        if os.path.exists(f):
+            custom_wn_file = f
+            print(f"Found lexicon file: {f}")
             break
 
-    if custom_wn_file is None:
-        print("Error: could not find 'omw-en_1.4_cn.xml'")
-        print("Make sure the file is in the same directory as this script.")
-        sys.exit(1)
+    lexicon_id = 'omw-en:1.4.cn'
 
-    lexicon_id = "omw-en:1.4.cn"
-
-    # Load or install the lexicon if needed
     try:
-        wn.Wordnet(lexicon_id)
-        print(f"Lexicon '{lexicon_id}' already available.")
+        ewn = wn.Wordnet(lexicon_id)
+        print(f"Lexicon '{lexicon_id}' loaded")
     except wn.Error:
-        print(f"Installing lexicon from '{custom_wn_file}' (may take a moment)...")
-        wn.add(custom_wn_file)
-        print("Lexicon installed.")
+        if custom_wn_file:
+            print("Installing lexicon")
+            wn.add(custom_wn_file)
+            ewn = wn.Wordnet(lexicon_id)
+            print("Lexicon installed")
+        else:
+            print("Lexicon missing and file not found")
+            sys.exit(1)
 
-    # Load CoreLex mapping
     corelex_file = "synset_to_type.json"
-    corelex_path = None
+    found_path = None
 
     for root, _, files in os.walk("."):
         if corelex_file in files:
-            corelex_path = os.path.join(root, corelex_file)
+            found_path = os.path.join(root, corelex_file)
             break
 
-    if corelex_path is None:
-        print("Error: synset_to_type.json not found.")
+    if not found_path:
+        print("Could not find 'synset_to_type.json'")
         sys.exit(1)
 
-    with open(corelex_path, "r", encoding="utf-8") as f:
+    with open(found_path, 'r', encoding='utf-8') as f:
         corelex = json.load(f)
 
-    print(f"Loaded CoreLex with {len(corelex)} entries.")
-
-    # Load ChainNet words (used only as a word list)
-    words = []
-    for path in ("chainnet.json", "data/chainnet.json"):
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                content = data.get("content", data)
-                words = [item["wordform"] for item in content if "wordform" in item]
-            break
-
-    if not words:
-        print("Warning: chainnet.json not found, using fallback list.")
-        words = ["chestnut", "head", "pig", "mouth", "star", "hawk", "lamb"]
-
-    return wn.Wordnet(lexicon_id), corelex, words
+    print(f"Loaded CoreLex map with {len(corelex)} entries")
+    return ewn, corelex
 
 
-def get_corelex_type(wn_sense, corelex_map):
-    """
-    Maps a custom WordNet sense to a CoreLex type.
-    """
+def get_corelex_type(word, sense_id, noun_senses, corelex_map):
     try:
-        # Example ID: omw-en-chestnut-07772274-n
-        m = re.search(r"-(\d{8})-", wn_sense.id)
-        if not m:
-            return "Unknown_ID_Format"
+        index = next((i for i, s in enumerate(noun_senses) if s.id == sense_id), -1)
+        if index == -1:
+            return None
 
-        offset = int(m.group(1))
-        pos = wn_sense.id[-1]
+        key_v1 = f"{word}.n.{index+1:02d}"
+        key_v2 = f"{word}.n.{index+1}"
 
-        if pos != "n":
-            return "Not_Noun"
+        return corelex_map.get(key_v1) or corelex_map.get(key_v2)
 
-        synset = nltk_wn.synset_from_pos_and_offset("n", offset)
-        synset_name = synset.name()
+    except:
+        return None
 
-        return corelex_map.get(synset_name, "No_CoreLex_Entry")
 
-    except Exception:
-        return "Map_Error"
+def get_noun_senses(ewn, lemma):
+    return [s for s in ewn.senses(lemma) if s.synset().pos == 'n']
+
+
+def resolve_target_type(ewn, target_sense, corelex):
+    tgt_lemma = target_sense.word().lemma()
+    tgt_senses = get_noun_senses(ewn, tgt_lemma)
+
+    return get_corelex_type(
+        tgt_lemma,
+        target_sense.id,
+        tgt_senses,
+        corelex
+    )
 
 
 def main():
-    ewn, corelex, target_words = setup_resources()
+    ewn, corelex = setup_resources()
 
-    print("\n" + "=" * 85)
-    print(f"{'WORD':<15} {'SOURCE (Prototype)':<25} {'->':<4} {'TARGET (Metaphor)':<20}")
-    print("=" * 85)
+    target_words = [
+        'chestnut', 'pig', 'star', 'mouth', 'head', 'face', 'arm',
+        'leg', 'foot', 'dog', 'rat', 'snake', 'lamb', 'hawk'
+    ]
+    print(40 * "-")
+    print("WORD\tSOURCE TYPE\tTARGET TYPE")
+    print(40 * "-")
 
-    count = 0
+    detected_shifts = []
 
-    for word in sorted(set(target_words)):
-        senses = ewn.senses(word)
+    for word in target_words:
+        noun_senses = get_noun_senses(ewn, word)
 
-        for sense in senses:
-            rels = sense.relations()
-
-            targets = []
-            if "metaphor" in rels:
-                targets.extend(rels["metaphor"])
-            if "has_metaphor" in rels:
-                targets.extend(rels["has_metaphor"])
-
-            if not targets:
+        for sense in noun_senses:
+            relations = sense.relations()
+            if 'metaphor' not in relations:
                 continue
 
-            source_type = get_corelex_type(sense, corelex)
+            src_type = get_corelex_type(word, sense.id, noun_senses, corelex)
 
-            for target_sense in targets:
-                target_type = get_corelex_type(target_sense, corelex)
+            for target_sense in relations['metaphor']:
+                tgt_type = resolve_target_type(ewn, target_sense, corelex)
 
-                ok = (
-                    source_type not in ("Not_Noun", "Map_Error", "No_CoreLex_Entry")
-                    and target_type not in ("Not_Noun", "Map_Error", "No_CoreLex_Entry")
-                )
+                if src_type and tgt_type and src_type != tgt_type:
+                    print(f"{word}\t{src_type}\t{tgt_type}")
 
-                if ok and source_type != target_type:
-                    print(f"{word:<15} {source_type:<25} ->  {target_type:<20}")
-                    count += 1
+                    try:
+                        src_def = sense.synset().definition()
+                    except:
+                        src_def = "Definition unavailable"
 
-        if count >= 50:
-            break
+                    try:
+                        tgt_def = target_sense.synset().definition()
+                    except:
+                        tgt_def = "Definition unavailable"
 
-    print("=" * 85)
-    print(f"Analysis complete. Found {count} semantic shifts.")
+                    print(f"  Source: {src_def}")
+                    print(f"  Target: {tgt_def}\n")
+
+                    detected_shifts.append((src_type, tgt_type))
+
+    print("Analysis")
+
+    if not detected_shifts:
+        print("No semantic shifts detected")
+    else:
+        print(f"Total shifts: {len(detected_shifts)}")
+
+        counts = Counter(detected_shifts)
+        for (src, tgt), count in counts.most_common(5):
+            print(f"{src} -> {tgt}: {count}")
 
 
 if __name__ == "__main__":
