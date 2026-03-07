@@ -1,0 +1,2 @@
+Python 3.10+
+wn 0.14.0 to ensure omw-en:1.4.cn loads without environment issues.

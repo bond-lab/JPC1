@@ -1,0 +1,136 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true]{hyperref}
+\hypersetup{
+    citecolor=OliveGreen,
+    linkcolor=NavyBlue,
+    urlcolor=NavyBlue
+}
+\usepackage{url}
+\usepackage{booktabs}
+
+\title{JPC1: Programmable Semantic Shift Analysis using ChainNet and CoreLex}
+\author{
+Barbora Mahdalov\'a (\href{https://github.com/bmahdalova}{bmahdalova})\\
+\href{mailto:mahdba00@upol.cz}{mahdba00@upol.cz}
+\and
+Dominik Fr\'anek (\href{https://github.com/dfranek161}{dfranek161})\\
+\href{mailto:frando02@upol.cz}{frando02@upol.cz}
+}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The goal of this task was to investigate lexical--conceptual mappings in a programmable way, with a focus on semantic relationships between categories such as PERSON and ANIMAL. While the assignment suggested approaches such as manual inspection of dictionary entries or cross-linguistic comparison, we approached the problem computationally.
+
+Our objective was to automatically detect semantic category shifts (e.g. ANIMAL $\rightarrow$ HUMAN) using structured lexical resources. Specifically, we integrated:
+
+\begin{itemize}
+\item ChainNet – which encodes metaphorical relations between WordNet senses
+\item CoreLex – which assigns WordNet noun senses to coarse semantic types
+\end{itemize}
+
+By combining these resources, we aimed to identify not only whether a semantic shift occurs, but also what conceptual mapping it represents.
+
+\section{Background}
+
+This work builds on recent research showing that tropes such as metaphor can be analyzed computationally using structured lexical data.
+
+\subsection*{Resources}
+
+We used three primary resources:
+
+\begin{itemize}
+\item \textbf{OMW English 1.4 (ChainNet)} – a version of WordNet extended with metaphor relations between senses.
+\item \textbf{CoreLex} – an ontology mapping WordNet noun senses into 39 semantic types such as ANIMAL, HUMAN, ARTIFACT.
+\item \textbf{Python wn library} – used to load and query the ChainNet XML lexicon.
+\end{itemize}
+
+These resources allowed us to move from manual analysis toward a fully programmable pipeline.
+
+\section{Approach}
+
+Our approach evolved during development.
+
+An earlier version relied on extracting synset offsets and aligning them via the NLTK interface. This proved unreliable due to version mismatches between resources.
+
+The final pipeline instead uses a sense--index mapping strategy directly within the wn environment.
+
+The implemented system (\href{https://github.com/YOUR-REPO-LINK}{analyze\_shifts\_final.py}) performs the following steps:
+
+\begin{enumerate}
+\item Loads the ChainNet XML lexicon into the wn database
+\item Retrieves noun senses for a set of polysemous words
+\item Extracts metaphor relations between senses
+\item Dynamically resolves metaphor targets, even when they belong to different lemmas
+\item Maps sense index positions to CoreLex semantic types
+\end{enumerate}
+
+Only forward metaphor relations were traced in order to avoid double-counting bidirectional links.
+
+\section{Results}
+
+The system identified 11 distinct semantic shifts.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Word & Source Type & Target Type \\
+\midrule
+Chestnut & NATURAL\_BODY & PSYCHOLOGICAL\_FEATURE \\
+Star & NATURAL\_BODY & FORM \\
+Mouth & PART & SPACE \\
+Mouth & PART & PHYSICAL\_OBJECT \\
+Mouth & PART & ARTIFACT \\
+Arm & PART & ARTIFACT \\
+Leg & PART & ARTIFACT \\
+Dog & ANIMAL & HUMAN \\
+Rat & ANIMAL & ARTIFACT \\
+Snake & NATURAL\_BODY & PHYSICAL\_OBJECT \\
+Hawk & ANIMAL & HUMAN \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The most frequent shift patterns were:
+
+\begin{itemize}
+\item PART $\rightarrow$ ARTIFACT
+\item ANIMAL $\rightarrow$ HUMAN
+\item NATURAL\_BODY $\rightarrow$ PHYSICAL\_OBJECT / FORM
+\end{itemize}
+
+\section{Discussion}
+
+The results reveal systematic conceptual mappings.
+
+Mappings from PART to ARTIFACT illustrate how human anatomy serves as a structural model for objects. For example, containers may have a ``mouth'' and furniture may have ``legs''.
+
+Mappings from ANIMAL to HUMAN rely on behavioral traits rather than physical resemblance, as seen in metaphorical uses of words such as \textit{hawk}.
+
+An inconsistency was observed in the classification of \textit{chestnut}, where a physical anatomical feature was mapped to a psychological category. This highlights limitations of fully automated semantic ontologies.
+
+All observed shifts moved from more concrete domains toward more abstract or socially interpreted ones, supporting the directional nature of metaphor.
+
+\section{Conclusions}
+
+This project demonstrates that semantic shifts can be detected automatically by integrating structured lexical resources. By refining the mapping between ChainNet and CoreLex using sense-index alignment, we developed a robust pipeline capable of identifying conceptual mappings such as ANIMAL $\rightarrow$ HUMAN.
+
+Future work could extend this approach cross-linguistically or explore connections between semantic shift and morphological processes such as zero-derivation.
+
+\subsection*{Author Contributions}
+
+The code represents collaborative work resulting from extensive brainstorming and problem-solving. The collaboration included understanding the assignment objectives, analyzing and reconciling the ChainNet and CoreLex datasets, designing and implementing the semantic-shift detection pipeline, and verifying the results to ensure accuracy and completeness.
+
+The original report was written by Dominik Fr\'anek and subsequently refined to its final form by Barbora Mahdalov\'a.
+
+While the computational analysis and report content were developed independently by the authors, minor assistance from AI tools was used to improve language clarity and formatting.
+
+\section*{Code Availability}
+
+The script \texttt{analyze\_shifts\_final.py} and associated data files are included in the project repository.
+
+\end{document}

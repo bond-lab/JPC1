@@ -1,0 +1,91 @@
+import nltk
+from nltk.corpus import wordnet as wn
+
+# nltk.download('wordnet')
+# nltk.download('omw-1.4')
+
+def get_derivationally_related_forms(word):
+    """Vrací odvozeniny slova z WordNetu."""
+    forms = set()
+    for synset in wn.synsets(word):
+        for lemma in synset.lemmas():
+            forms.add(lemma.name())
+            for der in lemma.derivationally_related_forms():
+                forms.add(der.name())
+    return forms
+
+def get_synonyms(word):
+    """Vrací synonyma slova z WordNetu."""
+    synonyms = set()
+    for synset in wn.synsets(word):
+        for lemma in synset.lemmas():
+            synonyms.add(lemma.name())
+    return synonyms
+
+def print_word_list(title, words):
+    print(title)
+    for word in sorted(words):
+        print(f"- {word}")
+    print()
+
+def highlight(text, match):
+    """Vrátí text se zvýrazněným match jako ((match))."""
+    return text.replace(match, f"(({match}))")
+
+def find_metaphor_in_definitions(base_word, metaphor_word):
+    base_derivations = get_derivationally_related_forms(base_word)
+    metaphor_derivations = get_derivationally_related_forms(metaphor_word)
+    metaphor_synonyms = get_synonyms(metaphor_word)
+    metaphor_all = metaphor_derivations.union(metaphor_synonyms)
+
+    print_word_list(f"Odvozeniny základového slova '{base_word}':", base_derivations)
+    print_word_list(f"Odvozeniny metafory '{metaphor_word}':", metaphor_derivations)
+    print_word_list(f"Synonyma metafory '{metaphor_word}':", metaphor_synonyms)
+
+    matches = []
+
+    for word in base_derivations:              # odvozeniny od base_word
+        for synset in wn.synsets(word):
+            pos = synset.pos()  # n, v, a, r
+            definition = synset.definition()
+            example_texts = synset.examples()
+
+            for m_word in metaphor_all:
+                # definice
+                if m_word in definition:
+                    highlighted = highlight(definition, m_word)
+                    matches.append((word, pos, "definition match", highlighted))
+
+                # příklady
+                for ex in example_texts:
+                    if m_word in ex:
+                        highlighted = highlight(ex, m_word)
+                        matches.append((word, pos, "example match", highlighted))
+
+    return matches
+
+
+if __name__ == "__main__":
+    base_word = "dark"
+    metaphor_word = "confusion"
+
+    results = find_metaphor_in_definitions(base_word, metaphor_word)
+
+    # nová struktura: <odvozenina_light> (<POS>) / <match_type>: <věta s ((match))>
+    if results:
+        for base_derivation, pos, match_type, sentence in results:
+            print(f"{base_derivation} ({pos}) / {match_type}: {sentence}")
+    else:
+        print("Žádné shody nebyly nalezeny.")
+
+
+
+# not knowladge but undrestanding
+# light -  understand 
+# dark - ignorance, confusion
+
+# life - , game??, radši ne - play???
+
+# pair of metaphores - chainmet
+# if both base and methare can be verbat there is metaphore probaby
+# chainment only has the nouns

@@ -3,4 +3,4 @@ uv venv .venv
 ### install requirements
 uv pip install -r requirements.txt
 ### run
-uv run python find_topic.py
+uv run --with-requirements requirements.txt python find_topic.py
