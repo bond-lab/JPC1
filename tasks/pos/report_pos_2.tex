@@ -1,0 +1,360 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true]{hyperref}
+\hypersetup{
+    citecolor=OliveGreen,
+    linkcolor=NavyBlue,
+    urlcolor=NavyBlue
+}
+\usepackage{url}
+
+\title{JPC1: Extending Metaphor Using WordNet}
+\author{
+Jakub Pokorný (\href{https://github.com/pokoja12}{pokoja12})\\
+\href{mailto:student1@email.com}{pokoja12@upol.cz}
+\and
+Nikola Zdařilová\\
+\href{mailto:student2@email.com}{nikola.zdarilova02@upol.cz}
+}
+\date{29 January 2026}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+The main goal of this work is to extend already established metaphorical relationships to new lexical forms, with the intention of expanding them across different parts of speech, though not limited to this. Rather than treating metaphors as fixed expressions, this work approaches them as relationships that can be further examined to reveal additional metaphorical connections. 
+
+\section{Background}
+\label{sec:background}
+
+This work builds on existing lexical-semantic resources, particularly WordNet, which provides structured information about word meanings, synonyms, derivations, definitions, and example sentences. These resources enable systematic exploration of semantic and metaphorical relationships between words.
+
+\subsection*{Resources}
+\label{sec:resources}
+
+\begin{itemize}
+\item McCrae, John P., Rademaker, Alexandre, Bond, Francis, Rudnicka, Ewa, and Fellbaum, Christiane.
+\textit{English WordNet 2019 -- An Open-Source WordNet for English}.
+Proceedings of the 10th Global Wordnet Conference, Wroclaw, Poland, 2019.
+\url{https://aclanthology.org/2019.gwc-1.31/}
+\end{itemize}
+
+\clearpage  % nová stránka
+
+\section{Approach}
+\label{sec:approach}
+
+The program is designed to expand well-known metaphorical pairs such as \textit{illuminate--understand} to other related lexical forms, potentially across different parts of speech. For example, it can generate a pair such as \textit{clarity--understanding}, where, unlike the original pair, both words are nouns. In our study, the first word (clarity) is treated as a metaphorical expression, while the second (understand) represents the source concept from which the metaphorical meaning of clarity is derived. Moreover, the program attempts to estimate the exact sense of the source concept.
+
+The core of the program is the function \texttt{extend\_metaphor}, which performs most of the analysis for each pair. It begins by calling \texttt{word\_related\_forms} to collect all synonyms and derivationally related forms for both the metaphorical word and the source word (e.g., dark $\rightarrow$ darkness). For every metaphorical form, the program checks all source forms against all definitions and examples of that form. Whenever a source form appears in a definition or example, the \texttt{highlight} function marks it in the text. Highlighting not only visually identifies the source word but also provides input for \texttt{sense\_key\_from\_marked\_words}. This function uses the highlighted sentence to apply Word Sense Disambiguation using the Lesk algorithm, estimating the exact meaning (synset) of each highlighted word and returning its sense key (lemma + synset).
+
+Each match found by \texttt{extend\_metaphor} is stored as a structured entry in the results set, including:
+
+\begin{itemize}
+\item the metaphorical word
+\item its part of speech
+\item the type of match (definition or example)
+\item the metaphor’s sense key (metaphor lemma + metaphor synset)
+\item the highlighted sentence
+\item the sense keys of the estimated source words (source lemma + source synset)
+\end{itemize}
+
+Finally, the program iterates through a predefined list of metaphor--source pairs in \texttt{main}. For each pair, \texttt{extend\_metaphor} produces an organized overview of how abstract concepts are expressed metaphorically across different lexical forms.
+
+Additionally, the program calculates the distances between the senses (synsets) of the metaphorical and source words using the \texttt{sense\_key\_distance} function. However, such distances can only be computed when both words share the same part of speech, since WordNet does not define semantic distance between synsets belonging to different parts of speech.
+
+\section{Results}
+\label{sec:results}
+
+The program produces both correct metaphorical matches and false matches, which must be manually verified.
+
+\subsection*{Correct Matches}
+{\small
+
+For simplicity, this report displays only matches with a unique combination of lemma, part of speech, and match type. Apparent duplicate matches are still distinguished by their different sentence contexts and source meanings. Thus, even in the full list, each match remains unique due to the specific sentence context and the estimated sense derived from it.
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ light \& understand}
+
+\texttt{\textcolor{blue}{clarity} (n) / definition match (clarity\%1:07:01::): free from obscurity and easy to <<<\textcolor{purple}{understand}>>>; the comprehensibility of clear expression (understand\%2:31:00::) (-)}
+
+\texttt{\textcolor{blue}{clearness} (n) / definition match (clearness\%1:07:01::): free from obscurity and easy to <<<\textcolor{purple}{understand}>>>; the comprehensibility of clear expression (understand\%2:31:00::) (-)} 
+
+\texttt{\textcolor{blue}{illumination} (n) / definition match (illumination\%1:10:00::): an <<<\textcolor{purple}{interpret}>>>ation that removes obstacles to <<<\textcolor{purple}{understanding}>>> (interpret\%2:32:00::, understanding\%1:09:03::) (-, \textcolor{ForestGreen}{11})}
+
+\texttt{\textcolor{blue}{illumination} (n) / example match (illumination\%1:10:00::): the professor's clarification helped her to <<<\textcolor{purple}{understand}>>> the textbook (understand\%2:31:02::) (-)}
+
+\texttt{\textcolor{blue}{light} (n) / definition match (light\%1:09:00::): mental <<<\textcolor{purple}{understanding}>>> as an enlightening experience (understanding\%1:10:00::) (\textcolor{ForestGreen}{12})}
+
+\texttt{\textcolor{blue}{light} (n) / example match (light\%1:09:01::): although he saw it in a different light, he still did not <<<\textcolor{purple}{understand}>>> (understand\%2:31:03::) (-)}
+
+\vspace{1em}
+
+\clearpage  % nová stránka
+
+\noindent\textbf{\textbullet\ dark \& ignorance}
+
+\texttt{\textcolor{blue}{night} (n) / definition match (night\%1:28:01::): a period of <<<\textcolor{purple}{ignorance}>>> or backwardness or gloom (ignorance\%1:09:00::) (\textcolor{ForestGreen}{8})}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ dark \& confusion}
+
+\texttt{\textcolor{blue}{obscure} (v) / example match (obscure\%2:31:00::): Her remarks <<<\textcolor{purple}{confused}>>> the debate (confused\%5:00:00:unoriented:00) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ fire \& passion}
+
+\texttt{\textcolor{blue}{ardor} (n) / definition match (ardor\%1:12:00::): intense feeling of <<<\textcolor{purple}{love}>>> (love\%1:12:01::) (\textcolor{ForestGreen}{6}) }
+
+%\texttt{\textcolor{blue}{ardor} (n) / definition match (ardor\%1:12:02::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7}) }
+
+%\texttt{\textcolor{blue}{ardour} (n) / definition match (ardour\%1:12:00::): intense feeling of <<<\textcolor{purple}{love}>>> (love\%1:12:01::) (\textcolor{ForestGreen}{6}) }
+
+\texttt{\textcolor{blue}{ardour} (n) / definition match (ardour\%1:12:02::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7}) }
+
+\texttt{\textcolor{blue}{burn} (v) / definition match (burn\%2:37:00::): feel strong emotion, especially anger or <<<\textcolor{purple}{passion}>>> (passion\%1:12:00::) (-)}
+
+\texttt{\textcolor{blue}{fervency} (n) / definition match (fervency\%1:12:00::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7}) }
+
+\texttt{\textcolor{blue}{fervent} (s) / example match (fervent\%5:00:00:passionate:00): a torrid <<<\textcolor{purple}{love}>>> affair (love\%1:12:00::)}
+
+%\texttt{\textcolor{blue}{fervent} (s) / example match (fervent\%5:00:00:passionate:00): an ardent <<<\textcolor{purple}{love}>>>r (love\%2:37:01::) (-)}
+
+%\texttt{\textcolor{blue}{fervent} (s) / example match (fervent\%5:00:00:passionate:00): an im<<<\textcolor{purple}{passion}>>>ed appeal (passion\%1:16:00::) (-)}
+
+%\texttt{\textcolor{blue}{fervent} (s) / example match (fervent\%5:00:00:passionate:00): ardent <<<\textcolor{purple}{love}>>> (love\%2:37:01::) (-)}
+
+%\texttt{\textcolor{blue}{fervid} (s) / example match (fervid\%5:00:00:passionate:00): a torrid <<<\textcolor{purple}{love}>>> affair (love\%1:12:00::) (-)}
+
+\texttt{\textcolor{blue}{fervid} (s) / example match (fervid\%5:00:00:passionate:00): an ardent <<<\textcolor{purple}{love}>>>r (love\%2:37:01::) (-)}
+
+%\texttt{\textcolor{blue}{fervid} (s) / example match (fervid\%5:00:00:passionate:00): an im<<<\textcolor{purple}{passion}>>>ed appeal (passion\%1:16:00::) (-)}
+
+%\texttt{\textcolor{blue}{fervid} (s) / example match (fervid\%5:00:00:passionate:00): ardent <<<\textcolor{purple}{love}>>> (love\%2:37:01::) (-)}
+
+\texttt{\textcolor{blue}{fervidness} (n) / definition match (fervidness\%1:12:00::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7}) }
+
+\texttt{\textcolor{blue}{fervor} (n) / definition match (fervor\%1:12:00::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7})}
+
+\texttt{\textcolor{blue}{fervour} (n) / definition match (fervour\%1:12:00::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7})}
+
+\texttt{\textcolor{blue}{fiery} (s) / example match (fiery\%5:00:00:hot:02): flaming <<<\textcolor{purple}{passion}>>>s (passion\%1:12:00::) (-) }
+
+%\texttt{\textcolor{blue}{fiery} (s) / example match (fiery\%5:00:00:passionate:00): a torrid <<<\textcolor{purple}{love}>>> affair (love\%1:12:00::) (-) }
+
+%\texttt{\textcolor{blue}{fiery} (s) / example match (fiery\%5:00:00:passionate:00): an ardent <<<\textcolor{purple}{love}>>>r (love\%2:37:01::) (-)}
+
+%\texttt{\textcolor{blue}{fiery} (s) / example match (fiery\%5:00:00:passionate:00): an im<<<\textcolor{purple}{passion}>>>ed appeal (passion\%1:16:00::) (-)}
+
+%\texttt{\textcolor{blue}{fiery} (s) / example match (fiery\%5:00:00:passionate:00): ardent <<<\textcolor{purple}{love}>>> (love\%2:37:01::) (-)}
+
+\texttt{\textcolor{blue}{fire} (n) / definition match (fire\%1:12:00::): feelings of great <<<\textcolor{purple}{warmth}>>> and intensity (warmth\%1:07:00::) (\textcolor{ForestGreen}{7}) }
+
+\texttt{\textcolor{blue}{flaming} (s) / example match (flaming\%5:00:00:hot:02): flaming <<<\textcolor{purple}{passion}>>>s (passion\%1:12:00::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ fire \& anger}
+
+\texttt{\textcolor{blue}{burn} (v) / definition match (burn\%2:37:00::): feel strong emotion, especially <<<\textcolor{purple}{anger}>>> or passion (anger\%1:12:00::) (-)}
+
+\texttt{\textcolor{blue}{burn} (v) / example match (burn\%2:37:00::): She was burning with <<<\textcolor{purple}{anger}>>> (anger\%1:12:00::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ time \& resource}
+
+\texttt{\textcolor{blue}{time} (n) / definition match (time\%1:28:05::): a period of time considered as a <<<\textcolor{purple}{resource}>>> under your control and sufficient to accomplish something (resource\%1:21:00::) (\textcolor{ForestGreen}{8})}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ life \& path}
+
+%\texttt{\textcolor{blue}{life} (n) / definition match (life\%1:09:00::): the experience of being alive; the <<<\textcolor{purple}{course}>>> of human events and activities (course\%1:14:00::) (\textcolor{ForestGreen}{10}) }
+
+\texttt{\textcolor{blue}{life} (n) / definition match (life\%1:26:02::): the <<<\textcolor{purple}{course}>>> of existence of an individual; the actions and events that occur in living (course\%1:14:00::) (\textcolor{ForestGreen}{9}) }
+
+\texttt{\textcolor{blue}{living} (n) / definition match (living\%1:09:00::): the experience of being alive; the <<<\textcolor{purple}{course}>>> of human events and activities (course\%1:14:00::) (\textcolor{ForestGreen}{10}) }
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ cold \& unfriendly}
+
+\texttt{\textcolor{blue}{cold} (a) / example match (cold\%3:00:02::): a cold <<<\textcolor{purple}{unfriendly}>>> nod (unfriendly\%3:00:02::) (-)}
+
+\texttt{\textcolor{blue}{frigid} (s) / definition match (frigid\%5:00:00:cold:02): devoid of warmth and cordiality; expressive of <<<\textcolor{purple}{unfriendliness}>>> or disdain (unfriendliness\%1:12:00::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ warm \& friendly}
+
+\texttt{\textcolor{blue}{warm} (a) / definition match (warm\%3:00:02::): psychologically warm; <<<\textcolor{purple}{friendly}>>> and responsive (friendly\%1:14:00::) (-)}
+
+\texttt{\textcolor{blue}{warm\_up} (v) / definition match (warm\_up\%2:30:01::): become more <<<\textcolor{purple}{friendly}>>> or open (friendly\%1:14:00::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ hot \& sexy}
+
+\texttt{\textcolor{blue}{hot} (s) / definition match (hot\%5:00:00:sexy:00): <<<\textcolor{purple}{sex}>>>ually excited or exciting (sex\%1:14:00::) (-)}
+
+\texttt{\textcolor{blue}{hotness} (n) / definition match (hotness\%1:26:00::): a state of <<<\textcolor{purple}{sex}>>>ual arousal (sex\%1:14:00::) (\textcolor{ForestGreen}{11})}
+
+\texttt{\textcolor{blue}{red-hot} (s) / definition match (red-hot\%5:00:00:sexy:00): having strong <<<\textcolor{purple}{sex}>>>ual appeal (sex\%2:31:00::) (-)}
+
+\texttt{\textcolor{blue}{spicy} (s) / definition match (spicy\%5:00:00:sexy:00): suggestive of <<<\textcolor{purple}{sex}>>>ual impropriety (sex\%1:14:00::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ motion \& emotion}
+
+\texttt{\textcolor{blue}{move} (v) / definition match (move\%2:37:00::): have an <<<\textcolor{purple}{emotional}>>> or cognitive impact upon (emotional\%3:00:02::) (-)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ death \& end}
+
+%\texttt{\textcolor{blue}{death} (n) / definition match (death\%1:19:00::): the permanent <<<\textcolor{purple}{end}>>> of all life functions in an organism or part of an organism (end\%2:42:01::) (-)}
+
+%\texttt{\textcolor{blue}{death} (n) / definition match (death\%1:28:00::): the time when something <<<\textcolor{purple}{end}>>>s (end\%1:28:00::) (\textcolor{ForestGreen}{1})}
+
+\texttt{\textcolor{blue}{death} (n) / definition match (death\%1:28:01::): the time at which life <<<\textcolor{purple}{end}>>>s; continuing until dead (end\%1:28:00::) (\textcolor{ForestGreen}{1}) }
+
+%\texttt{\textcolor{blue}{death} (n) / example match (death\%1:26:01::): he came to a bad <<<\textcolor{purple}{end}>>> (end\%1:09:02::) (\textcolor{ForestGreen}{7})}
+
+%\texttt{\textcolor{blue}{death} (n) / example match (death\%1:26:01::): the so-called glorious experiment came to an inglorious <<<\textcolor{purple}{end}>>> (end\%2:30:01::) (-)}
+
+\texttt{\textcolor{blue}{death} (n) / example match (death\%1:28:01::): a struggle to the <<<\textcolor{purple}{last}>>> (last\%1:24:00::) (\textcolor{ForestGreen}{9})}
+
+\clearpage  % nová stránka
+
+
+\texttt{\textcolor{blue}{demise} (n) / definition match (demise\%1:28:00::): the time when something <<<\textcolor{purple}{end}>>>s (end\%1:28:00::) (\textcolor{ForestGreen}{1})}
+
+\texttt{\textcolor{blue}{destruction} (n) / definition match (destruction\%1:04:00::): the <<<\textcolor{purple}{termination}>>> of something by causing so much damage to it that it cannot be repaired or no longer exists (termination\%1:10:00::) (\textcolor{ForestGreen}{13})}
+
+
+\texttt{\textcolor{blue}{destruction} (n) / example match (destruction\%1:26:00::): he came to a bad <<<\textcolor{purple}{end}>>> (end\%1:09:02::)  (\textcolor{ForestGreen}{7})}
+
+%\texttt{\textcolor{blue}{destruction} (n) / example match (destruction\%1:26:00::): the so-called glorious experiment came to an inglorious <<<\textcolor{purple}{end}>>> (end\%2:30:01::) (-)}
+
+\texttt{\textcolor{blue}{die} (v) / definition match (die\%2:30:01::): disappear or come to an <<<\textcolor{purple}{end}>>> (end\%2:30:01::) (-)}
+
+%\texttt{\textcolor{blue}{die} (v) / definition match (die\%2:30:04::): <<<\textcolor{purple}{stop}>>> operating or functioning (stop\%1:10:01::) (-)}
+
+%\texttt{\textcolor{blue}{die} (v) / definition match (die\%2:33:00::): to be on base at the <<<\textcolor{purple}{end}>>> of an inning, of a player (end\%1:09:02::) (-)}
+
+\texttt{\textcolor{blue}{dying} (n) / definition match (dying\%1:28:00::): the time when something <<<\textcolor{purple}{end}>>>s (end\%1:28:00::) (\textcolor{ForestGreen}{1})}
+
+\texttt{\textcolor{blue}{expiry} (n) / definition match (expiry\%1:28:00::): a coming to an <<<\textcolor{purple}{end}>>> of a contract period (end\%1:09:02::) (\textcolor{ForestGreen}{8})}
+
+\texttt{\textcolor{blue}{last} (n) / example match (last\%1:28:01::): she stayed until his <<<\textcolor{purple}{death}>>> (death\%1:28:01::) (\textcolor{ForestGreen}{0})}
+
+\texttt{\textcolor{blue}{last} (s) / definition match (last\%5:00:00:dying:00): occurring at the time of <<<\textcolor{purple}{death}>>> (death\%1:28:01::) (-)}
+
+}
+
+
+\subsection*{Examples of Incorrect Matches}
+{\small
+
+\noindent\textbf{\textbullet\ illuminate \& uncover}
+
+\texttt{\textcolor{red}{No matches} were found}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ light \& understand}
+
+\texttt{\textcolor{red}{bright} (s) / example match (bright\%5:00:00:happy:00): all the world <<<\textcolor{purple}{see}>>>ms bright and gay (see\%2:39:05::)}
+
+\texttt{\textcolor{red}{lighting} (n) / example match (lighting\%1:04:01::): an interior decorator must <<<\textcolor{purple}{understand}>>> lighting (understand\%2:31:00::)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ fire \& passion}
+
+\texttt{\textcolor{red}{flaming} (n) / definition match (flaming\%1:22:00::): the process of combustion of inflammable materials producing <<<\textcolor{purple}{heat}>>> and light and (often) smoke (heat\%1:07:01::)}
+
+\texttt{\textcolor{red}{provocation} (n) / definition match (provocation\%1:10:00::): needed encou<<<\textcolor{purple}{rage}>>>ment (rage\%1:12:00::)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ fire \& anger}
+
+\texttt{\textcolor{red}{fiery} (s) / example match (fiery\%5:00:00:passionate:00): a fervent adm<<<\textcolor{purple}{ire}>>>r (ire\%1:12:00::)}
+
+\texttt{\textcolor{red}{provocation} (n) / definition match (provocation\%1:04:00::): unfriendly behavior that causes <<<\textcolor{purple}{anger}>>> or resentment (anger\%1:12:00::)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ time \& money}
+
+\texttt{\textcolor{red}{No matches} were found}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ warm \& friendly}
+
+\texttt{\textcolor{red}{quick} (s) / example match (quick\%5:00:00:fast:01): was quick to make <<<\textcolor{purple}{friend}>>>s (friend\%1:18:00::)}
+
+\vspace{1em}
+
+\noindent\textbf{\textbullet\ death \& end}
+
+\texttt{\textcolor{red}{die} (v) / example match (die\%2:30:01::): My secret will <<<\textcolor{purple}{die}>>> with me! (die\%2:35:00::)}
+
+\texttt{\textcolor{red}{end} (v) / example match (end\%2:30:01::): She <<<\textcolor{purple}{end}>>>ed their fri<<<\textcolor{purple}{end}>>>ship when she found out that he had once been convicted of a crime (end\%1:06:02::, end\%1:06:02::)}
+
+}
+
+
+
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection*{Correct Matches}
+
+Although the distance between senses cannot be computed for most pairs (see the last piece of information in each data item), because the metaphorical and source words belong to different parts of speech, the large number of matches found still represent legitimate extensions of the original metaphorical pairs.
+
+In some cases, additional verification was necessary to determine whether the metaphorical word is etymologically related to the source concept. For example, for the metaphorical pair \textit{fire} -- \textit{passion}, the program produced many matches, including: \textit{ardor}, \textit{ardour}, \textit{fervency}, \textit{fervent}, \textit{fervid}, \textit{fervidness}, \textit{fervor}, and \textit{fervour}. These forms needed to be verified as historically related to the concept of fire. Etymological evidence confirms this connection. The words derive from Latin \textit{ardor}, meaning: “burning heat, flame”. Several related forms are connected to Latin \textit{ferve\=o}, meaning: “to boil, to be hot, to glow”.
+
+A similar pattern appears in the metaphorical pair \textit{cold} -- \textit{unfriendly}. For example, the word \textit{frigid} derives from Latin \textit{fr\={\i}gus}, meaning: “coldness, frost”.
+
+Another example is the pair \textit{death} -- \textit{end}. The word \textit{expiry} derives from Latin \textit{exp\={\i}r\=are}, meaning: “to breathe out, blow out, exhale; to breathe one’s last, die”.
+
+Sometimes, because of the intertwining of the pair, both words actually relate to the metaphor. For the pair \textit{fire}--\textit{passion} word \textit{ardour} is defined as “feelings of great \textless warmth\textgreater{} and intensity”. While \textit{warmth} relates to fire, the context of the description indicates that it refers to \textit{feelings} and \textit{intensity}, so the word is verified to be a correct match.
+
+Another example of intertwining occurs in the special case of the pair \textit{death}--\textit{end}, where \textit{last}--\textit{death} match is found, which is correct, although in the reverse direction.
+
+\subsection*{Incorrect Matches}
+
+Incorrect matches arise from several distinct causes.  
+
+A frequent cause is when terms are often used interchangeably. For example, pair \textit{death}--\textit{end}  yields many false matches simply because the same word appears in a sentence example of its match, e.g., “death - example match: her \textless death\textgreater{} came as a terrible shock” or “end - example match: the \textless end\textgreater{}  was exciting.” 
+
+Another source of error is when words are related only as synonyms, without any true etymological connection. For instance, the pair \textit{fire}--\textit{anger} may match “provocation - definition match: unfriendly behavior that causes \textless anger\textgreater{} or resentment”.
+
+False matches can also occur by coincidence. For example, source word \textit{understand} appears in an example sentence like “lighting - example match: an interior decorator must \textless understand\textgreater{} lighting” where the connection to the metaphorical word is incidental.  
+
+Problems also arise when synonyms of a source word correspond to highly common words. For the source \textit{understand}, words like \textit{read} or \textit{see} may generate many matches that are not meaningful.  
+
+Finally, a failure such as “no results found” sometimes happens simply because we miss the data to match any pair forms.
+
+In summary, incorrect matches can result from interchangeable terms, synonymous associations, coincidental occurrences, overly common forms, or missing data.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We examined how familiar metaphors can appear in forms different from their conventional expressions. This project provides insight into the flexible use of metaphor in language and shows that computational methods can help automatically identify metaphoric relationships.
+
+
+\end{document}
