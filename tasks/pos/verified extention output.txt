@@ -1,0 +1,388 @@
+⚫ Analysis: illuminate & uncover
+
+The lexical forms of the metaphor word 'illuminate': clear, clear_up, crystalise, crystalize, crystallise, crystallize, elucidate, elucidation, elucidative, enlighten, illume, illuminant, illuminate, illumination, illumine, light, light_up, lucidity, shed_light_on, sort_out, straighten_out
+
+The lexical forms of the source word 'uncover': bring_out, expose, reveal, uncover, unveil
+
+No matches were found
+
+⚫ Analysis: light & understand
+
+The lexical forms of the metaphor word 'light': Christ_Within, Inner_Light, Light, Light_Within, abstemious, abstemiousness, alight, bright, brightness, brightness_level, calorie-free, clarity, clean, clear, clearness, dismount, easy, faint, faintness, fall, fire_up, get_down, get_off, idle, ignitable, ignite, igniter, ignitible, ignition, ignitor, illume, illuminant, illuminate, illumination, illumine, light, light-colored, light-headed, light_source, light_up, lighter, lightheaded, lightheadedness, lighting, lightly, lightness, lightsome, lightsomeness, lite, loose, looseness, low-cal, luminance, luminosity, luminous, luminousness, perch, promiscuity, promiscuous, promiscuousness, scant, scantness, short, sluttish, sluttishness, spark, sparkle, sparkly, swooning, tripping, twinkle, twinkly, unaccented, unclouded, uncloudedness, unhorse, visible_light, visible_radiation, wakeful, wakefulness, wanton, wantonness, weak
+
+The lexical forms of the source word 'understand': empathise, empathize, empathy, infer, interpret, read, realisation, realise, realization, realize, see, sympathise, sympathize, sympathy, translate, understand, understandable, understanding
+
+clarity (n) / definition match (clarity%1:07:01::): free from obscurity and easy to <<understand>>; the comprehensibility of clear expression (understand%2:31:00::)
+clearness (n) / definition match (clearness%1:07:01::): free from obscurity and easy to <<understand>>; the comprehensibility of clear expression (understand%2:31:00::)
+illumination (n) / definition match (illumination%1:10:00::): an <<interpret>>ation that removes obstacles to <<understanding>> (interpret%2:32:00::, understanding%1:09:03::)
+illumination (n) / example match (illumination%1:10:00::): the professor's clarification helped her to <<understand>> the textbook (understand%2:31:02::)
+light (n) / definition match (light%1:09:00::): mental <<understanding>> as an enlightening experience (understanding%1:10:00::)
+light (n) / example match (light%1:09:01::): although he saw it in a different light, he still did not <<understand>> (understand%2:31:03::)
+
+	bright (a) / definition match (bright%3:00:00::): emitting or reflecting light <<read>>ily or in large amounts (read%2:31:09::)
+	bright (s) / example match (bright%5:00:00:happy:00): all the world <<see>>ms bright and gay (see%2:39:05::)
+	clean (a) / definition match (clean%3:00:03::): not sp<<read>>ing pollution or contamination; especially radioactive contamination (read%1:10:00::)
+	clean (v) / example match (clean%2:29:00::): clean up before you <<see>> your grandparents (see%2:36:00::)
+	clear (a) / definition match (clear%3:00:00::): <<read>>ily apparent to the mind (read%1:10:00::)
+	clear (r) / example match (clear%4:02:01::): could be <<see>>n clearly under the microscope (see%1:15:00::)
+	clear (r) / example match (clear%4:02:03::): <<read>> the book clear to the end (read%1:10:00::)
+	easy (a) / example match (easy%3:00:02::): by the time the chsild faced the actual problem of <<read>>ing she was familiar and at ease with all the elements words (read%2:31:02::)
+	easy (rThe lexical forms of the metaphor word) / example match (easy%4:02:02::): please go slow so I can <<see>> the sights (see%2:41:11::)
+	easy (s) / definition match (easy%5:00:00:available:00): less in demand and therefore <<read>>ily obtainable (read%1:10:00::)
+	easy (s) / definition match (easy%5:00:00:impressionable:00): <<read>>ily exploited or tricked (read%1:10:00::)
+	faintness (n) / definition match (faintness%1:12:00::): a feeling of faintness and of being <<read>>y to swoon (read%2:32:02::)
+	fall (v) / definition match (fall%2:42:04::): touch or <<see>>m as if touching visually or audibly (see%2:39:03::)
+	lighting (n) / example match (lighting%1:04:01::): an interior decorator must <<understand>> lighting (understand%2:31:00::)
+	lightly (r) / example match (lightly%4:02:03::): sp<<read>> the margarine thinly over the meat (read%1:10:00::)
+	loose (s) / example match (loose%5:00:00:inexact:00): a loose <<interpret>>ation of what she had been told (interpret%2:31:02::)
+	looseness (n) / example match (looseness%1:07:01::): mis<<understanding>>s can often be traced to a looseness of expression (understanding%1:09:03::)
+	short (a) / definition match (short%3:00:02::): primarily temporal sense; indicating or being or <<see>>ming to be limited in duration (see%2:31:03::)
+	short (s) / example match (short%5:00:00:breakable:00): shortb<<read>> is a short crumbly cookie (read%1:10:00::)
+
+⚫ Analysis: dark & ignorance
+
+The lexical forms of the metaphor word 'dark': benighted, black, blue, colored, coloured, dark, dark-skinned, darkness, dingy, disconsolate, dismal, dour, drab, drear, dreariness, dreary, gloomy, glowering, glum, glumness, grim, iniquity, moodiness, moody, morose, moroseness, night, nightly, nighttime, non-white, obscure, obscureness, obscurity, saturnine, shadow, sinister, sorry, sour, sourness, sullen, sullenness, wicked, wickedness
+
+The lexical forms of the source word 'ignorance': ignorance, ignorant, ignore
+
+night (n) / definition match (night%1:28:01::): a period of <<ignorance>> or backwardness or gloom (ignorance%1:09:00::)
+
+⚫ Analysis: dark & confusion
+
+The lexical forms of the metaphor word 'dark': benighted, black, blue, colored, coloured, dark, dark-skinned, darkness, dingy, disconsolate, dismal, dour, drab, drear, dreariness, dreary, gloomy, glowering, glum, glumness, grim, iniquity, moodiness, moody, morose, moroseness, night, nightly, nighttime, non-white, obscure, obscureness, obscurity, saturnine, shadow, sinister, sorry, sour, sourness, sullen, sullenness, wicked, wickedness
+
+The lexical forms of the source word 'confusion': confuse, confused, confusedness, confusion, disarray, discombobulate, discombobulation, mental_confusion, mix-up, muddiness
+
+obscure (v) / example match (obscure%2:31:00::): Her remarks <<confused>> the debate (confused%5:00:00:unoriented:00)
+
+⚫ Analysis: fire & passion
+
+The lexical forms of the metaphor word 'fire': ardor, ardour, arousal, arouse, attack, blast, burn, burn_down, burnable, can, discharge, dismiss, dismissal, dismissible, dismission, displace, elicit, elicitation, enkindle, evocation, evocative, evoke, fervency, fervent, fervid, fervidness, fervor, fervour, fiery, fire, firing, flack, flak, flame, flaming, force_out, fuel, give_notice, give_the_axe, give_the_sack, go_off, kindle, open_fire, provocation, provocative, provoke, raise, sack, sacking, send_away, terminate
+
+The lexical forms of the source word 'passion': Passion, Passion_of_Christ, cacoethes, heat, love, mania, manic, passion, passionate, passionateness, rage, warmth
+
+etymology: 
+ardor — burning heat; flame
+ferveō — to boil; to be hot; to glow
+
+ardor (n) / definition match (ardor%1:12:00::): intense feeling of <<love>> (love%1:12:01::)
+ardor (n) / definition match (ardor%1:12:02::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+ardour (n) / definition match (ardour%1:12:00::): intense feeling of <<love>> (love%1:12:01::)
+ardour (n) / definition match (ardour%1:12:02::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+burn (v) / definition match (burn%2:37:00::): feel strong emotion, especially anger or <<passion>> (passion%1:12:00::)
+fervency (n) / definition match (fervency%1:12:00::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+fervent (s) / example match (fervent%5:00:00:passionate:00): a torrid <<love>> affair (love%1:12:00::)
+fervent (s) / example match (fervent%5:00:00:passionate:00): an ardent <<love>>r (love%2:37:01::)
+fervent (s) / example match (fervent%5:00:00:passionate:00): an im<<passion>>ed appeal (passion%1:16:00::)
+fervent (s) / example match (fervent%5:00:00:passionate:00): ardent <<love>> (love%2:37:01::)
+fervid (s) / example match (fervid%5:00:00:passionate:00): a torrid <<love>> affair (love%1:12:00::)
+fervid (s) / example match (fervid%5:00:00:passionate:00): an ardent <<love>>r (love%2:37:01::)
+fervid (s) / example match (fervid%5:00:00:passionate:00): an im<<passion>>ed appeal (passion%1:16:00::)
+fervid (s) / example match (fervid%5:00:00:passionate:00): ardent <<love>> (love%2:37:01::)
+fervidness (n) / definition match (fervidness%1:12:00::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+fervor (n) / definition match (fervor%1:12:00::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+fervour (n) / definition match (fervour%1:12:00::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+fiery (s) / example match (fiery%5:00:00:hot:02): flaming <<passion>>s (passion%1:12:00::)
+fiery (s) / example match (fiery%5:00:00:passionate:00): a torrid <<love>> affair (love%1:12:00::)
+fiery (s) / example match (fiery%5:00:00:passionate:00): an ardent <<love>>r (love%2:37:01::)
+fiery (s) / example match (fiery%5:00:00:passionate:00): an im<<passion>>ed appeal (passion%1:16:00::)
+fiery (s) / example match (fiery%5:00:00:passionate:00): ardent <<love>> (love%2:37:01::)
+fire (n) / definition match (fire%1:12:00::): feelings of great <<warmth>> and intensity (warmth%1:07:00::)
+flaming (s) / example match (flaming%5:00:00:hot:02): flaming <<passion>>s (passion%1:12:00::)
+
+	burn (n) / definition match (burn%1:26:01::): an injury caused by exposure to <<heat>> or chemicals or radiation (heat%1:09:00::)
+	burn (v) / definition match (burn%2:30:03::): burn with <<heat>>, fire, or radiation (heat%2:40:00::)
+	burn (v) / definition match (burn%2:43:01::): shine intensely, as if with <<heat>> (heat%2:40:00::)
+	fervent (s) / example match (fervent%5:00:00:hot:01): set out...when the fervid <<heat>> subsides (heat%1:07:01::)
+	fervent (s) / example match (fervent%5:00:00:hot:01): the fervent <<heat>>...merely communicated a genial <<warmth>> to their half-torpid systems (heat%1:11:00::, warmth%1:07:01::)
+	fervid (s) / example match (fervid%5:00:00:hot:01): set out...when the fervid <<heat>> subsides (heat%1:07:01::)
+	fervid (s) / example match (fervid%5:00:00:hot:01): the fervent <<heat>>...merely communicated a genial <<warmth>> to their half-torpid systems (heat%1:11:00::, warmth%1:07:01::)
+	fire (n) / definition match (fire%1:22:00::): the process of combustion of inflammable materials producing <<heat>> and light and (often) smoke (heat%1:07:01::)
+	flame (n) / definition match (flame%1:22:00::): the process of combustion of inflammable materials producing <<heat>> and light and (often) smoke (heat%1:07:01::)
+	flaming (n) / definition match (flaming%1:22:00::): the process of combustion of inflammable materials producing <<heat>> and light and (often) smoke (heat%1:07:01::)
+	provocation (n) / definition match (provocation%1:10:00::): needed encou<<rage>>ment (rage%1:12:00::)
+	raise (v) / example match (raise%2:36:03::): We grow w<<heat>> here (heat%1:07:01::)
+
+⚫ Analysis: fire & anger
+
+The lexical forms of the metaphor word 'fire': ardor, ardour, arousal, arouse, attack, blast, burn, burn_down, burnable, can, discharge, dismiss, dismissal, dismissible, dismission, displace, elicit, elicitation, enkindle, evocation, evocative, evoke, fervency, fervent, fervid, fervidness, fervor, fervour, fiery, fire, firing, flack, flak, flame, flaming, force_out, fuel, give_notice, give_the_axe, give_the_sack, go_off, kindle, open_fire, provocation, provocative, provoke, raise, sack, sacking, send_away, terminate
+
+The lexical forms of the source word 'anger': anger, angriness, angry, choler, choleric, ira, ire, see_red, wrath
+
+burn (v) / definition match (burn%2:37:00::): feel strong emotion, especially <<anger>> or passion (anger%1:12:00::)
+burn (v) / example match (burn%2:37:00::): She was burning with <<anger>> (anger%1:12:00::)
+
+	attack (n) / example match (attack%1:10:00::): Clinton d<<ire>>cted his f<<ire>> at the Republican Party (ire%1:04:00::, ire%1:04:00::)
+	blast (n) / example match (blast%1:10:00::): Clinton d<<ire>>cted his f<<ire>> at the Republican Party (ire%1:04:00::, ire%1:04:00::)
+	blast (v) / definition match (blast%2:33:01::): f<<ire>> a shot (ire%1:12:00::)
+	burn (n) / definition match (burn%1:04:00::): damage inflicted by f<<ire>> (ire%1:04:00::)
+	burn (n) / definition match (burn%1:26:00::): pain that feels hot as if it were on f<<ire>> (ire%1:12:00::)
+	burn (v) / definition match (burn%2:30:02::): destroy by f<<ire>> (ire%1:04:00::)
+	burn (v) / definition match (burn%2:30:03::): burn with heat, f<<ire>>, or radiation (ire%1:12:00::)
+	burn_down (v) / definition match (burn_down%2:30:00::): burn completely; be consumed or destroyed by f<<ire>> (ire%1:04:00::)
+	burn_down (v) / definition match (burn_down%2:30:02::): destroy by f<<ire>> (ire%1:04:00::)
+	can (v) / example match (can%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	discharge (v) / example match (discharge%2:33:01::): f<<ire>> a bullet (ire%1:12:00::)
+	discharge (v) / example match (discharge%2:33:01::): f<<ire>> a gun (ire%1:12:00::)
+	discharge (v) / example match (discharge%2:33:02::): The gun f<<ire>>d (ire%1:12:00::)
+	dismiss (v) / example match (dismiss%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	dismissal (n) / definition match (dismissal%1:10:00::): official notice that you have been f<<ire>>d from your job (ire%1:12:00::)
+	dismission (n) / definition match (dismission%1:10:00::): official notice that you have been f<<ire>>d from your job (ire%1:12:00::)
+	displace (v) / example match (displace%2:38:02::): The d<<ire>>ctor moved more responsibilities onto his new assistant (ire%1:12:00::)
+	displace (v) / example match (displace%2:41:04::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	fervent (s) / example match (fervent%5:00:00:passionate:00): a fervent adm<<ire>>r (ire%1:12:00::)
+	fervent (s) / example match (fervent%5:00:00:passionate:00): a fervent des<<ire>> to change society (ire%1:12:00::)
+	fervid (s) / example match (fervid%5:00:00:passionate:00): a fervent adm<<ire>>r (ire%1:12:00::)
+	fervid (s) / example match (fervid%5:00:00:passionate:00): a fervent des<<ire>> to change society (ire%1:12:00::)
+	fiery (s) / definition match (fiery%5:00:00:hot:01): like or suggestive of f<<ire>> (ire%1:04:00::)
+	fiery (s) / example match (fiery%5:00:00:passionate:00): a fervent adm<<ire>>r (ire%1:12:00::)
+	fiery (s) / example match (fiery%5:00:00:passionate:00): a fervent des<<ire>> to change society (ire%1:12:00::)
+	fire (n) / definition match (fire%1:06:00::): a f<<ire>>place in which a relatively small f<<ire>> is burning (ire%1:12:00::, ire%1:12:00::)
+	fire (n) / example match (fire%1:04:00::): hold your f<<ire>> until you can see the whites of their eyes (ire%1:04:00::)
+	fire (n) / example match (fire%1:04:00::): they retreated in the face of withering enemy f<<ire>> (ire%1:04:00::)
+	fire (n) / example match (fire%1:06:00::): they sat by the f<<ire>> and talked (ire%1:04:00::)
+	fire (n) / example match (fire%1:10:00::): Clinton d<<ire>>cted his f<<ire>> at the Republican Party (ire%1:04:00::, ire%1:04:00::)
+	fire (n) / example match (fire%1:11:00::): they lost everything in the f<<ire>> (ire%1:04:00::)
+	fire (n) / example match (fire%1:11:01::): he went through f<<ire>> and damnation (ire%1:12:00::)
+	fire (n) / example match (fire%1:22:00::): f<<ire>> was one of our ancestors' first discoveries (ire%1:04:00::)
+	fire (n) / example match (fire%1:27:00::): barbecue over an open f<<ire>> (ire%1:12:00::)
+	fire (n) / example match (fire%1:27:00::): put the kettle on the f<<ire>> (ire%1:04:00::)
+	fire (v) / definition match (fire%2:30:01::): destroy by f<<ire>> (ire%1:04:00::)
+	fire (v) / definition match (fire%2:38:02::): drive out or away by or as if by f<<ire>> (ire%1:04:00::)
+	fire (v) / example match (fire%2:30:00::): f<<ire>> pottery (ire%1:12:00::)
+	fire (v) / example match (fire%2:33:00::): f<<ire>> a bullet (ire%1:12:00::)
+	fire (v) / example match (fire%2:33:00::): f<<ire>> a gun (ire%1:12:00::)
+	fire (v) / example match (fire%2:33:02::): The gun f<<ire>>d (ire%1:12:00::)
+	fire (v) / example match (fire%2:38:02::): Surrender f<<ire>>s the cold skepticism (ire%1:04:00::)
+	fire (v) / example match (fire%2:38:02::): The soldiers were f<<ire>>d (ire%1:12:00::)
+	fire (v) / example match (fire%2:40:00::): Oil f<<ire>>s the furnace (ire%1:04:00::)
+	fire (v) / example match (fire%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	firing (n) / definition match (firing%1:04:00::): the act of setting something on f<<ire>> (ire%1:04:00::)
+	firing (n) / example match (firing%1:04:03::): hold your f<<ire>> until you can see the whites of their eyes (ire%1:04:00::)
+	firing (n) / example match (firing%1:04:03::): they retreated in the face of withering enemy f<<ire>> (ire%1:04:00::)
+	flack (n) / example match (flack%1:10:00::): Clinton d<<ire>>cted his f<<ire>> at the Republican Party (ire%1:04:00::, ire%1:04:00::)
+	flak (n) / example match (flak%1:10:00::): Clinton d<<ire>>cted his f<<ire>> at the Republican Party (ire%1:04:00::, ire%1:04:00::)
+	flame (n) / example match (flame%1:22:00::): f<<ire>> was one of our ancestors' first discoveries (ire%1:04:00::)
+	flaming (n) / example match (flaming%1:22:00::): f<<ire>> was one of our ancestors' first discoveries (ire%1:04:00::)
+	force_out (n) / definition match (force_out%1:04:00::): a putout of a base runner who is requ<<ire>>d to run; the putout is accomplished by holding the ball while touching the base to which the runner must advance before the runner reaches that base (ire%1:04:00::)
+	force_out (v) / example match (force_out%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	fuel (v) / example match (fuel%2:40:01::): Oil f<<ire>>s the furnace (ire%1:04:00::)
+	give_notice (v) / example match (give_notice%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	give_the_axe (v) / example match (give_the_axe%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	give_the_sack (v) / example match (give_the_sack%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	go_off (v) / example match (go_off%2:33:00::): The gun f<<ire>>d (ire%1:12:00::)
+	kindle (v) / definition match (kindle%2:43:01::): catch f<<ire>> (ire%1:12:00::)
+	provocation (n) / definition match (provocation%1:04:00::): unfriendly behavior that causes <<anger>> or resentment (anger%1:12:00::)
+	provocative (s) / definition match (provocative%5:00:00:sexy:00): exciting sexual des<<ire>> (ire%1:12:00::)
+	raise (n) / example match (raise%1:04:00::): f<<ire>>man learn several different raises for getting ladders up (ire%1:12:00::)
+	raise (v) / example match (raise%2:41:04::): John was kicked upstairs when a replacement was h<<ire>>d (ire%1:12:00::)
+	sack (v) / example match (sack%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	send_away (v) / example match (send_away%2:41:00::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+	terminate (v) / example match (terminate%2:41:01::): The boss f<<ire>>d his secretary today (ire%1:12:00::)
+
+⚫ Analysis: time & money
+
+The lexical forms of the metaphor word 'time': clip, clock, clock_time, clocking, fourth_dimension, meter, metre, metric, prison_term, sentence, time, timely, timer, timing
+
+The lexical forms of the source word 'money': monetary, money, moneyer
+
+No matches were found
+
+⚫ Analysis: time & resource
+
+The lexical forms of the metaphor word 'time': clip, clock, clock_time, clocking, fourth_dimension, meter, metre, metric, prison_term, sentence, time, timely, timer, timing
+
+The lexical forms of the source word 'resource': imagination, resource, resourceful, resourcefulness
+
+time (n) / definition match (time%1:28:05::): a period of time considered as a <<resource>> under your control and sufficient to accomplish something (resource%1:21:00::)
+
+⚫ Analysis: Life & path
+
+The lexical forms of the metaphor word 'Life': alive, aliveness, animation, biographer, biographical, biography, life, life-time, life_history, life_sentence, life_story, lifer, lifespan, lifetime, live, liveliness, lively, living, spirit, spiritize, sprightliness, sprightly
+
+The lexical forms of the source word 'path': course, itinerary, path, route, track, way, way_of_life
+
+life (n) / definition match (life%1:09:00::): the experience of being alive; the <<course>> of human events and activities (course%1:14:00::)
+life (n) / definition match (life%1:26:02::): the <<course>> of existence of an individual; the actions and events that occur in living (course%1:14:00::)
+living (n) / definition match (living%1:09:00::): the experience of being alive; the <<course>> of human events and activities (course%1:14:00::)
+
+⚫ Analysis: Cold & Unfriendly
+
+The lexical forms of the metaphor word 'Cold': cold, cold-blooded, coldness, common_cold, dusty, frigid, frigidity, frigidness, inhuman, inhumanity, insensate, low_temperature, moth-eaten, stale, staleness
+
+The lexical forms of the source word 'Unfriendly': enmity, hostile, inimical, uncongenial, unfriendliness, unfriendly
+
+etymology:
+Latin frīgus - coldness, frost
+
+cold (a) / example match (cold%3:00:02::): a cold <<unfriendly>> nod (unfriendly%3:00:02::)
+frigid (s) / definition match (frigid%5:00:00:cold:02): devoid of warmth and cordiality; expressive of <<unfriendliness>> or disdain (unfriendliness%1:12:00::)
+
+⚫ Analysis: Warm & Friendly
+
+The lexical forms of the metaphor word 'Warm': affection, affectionate, affectionateness, ardent, fond, fondness, lovesome, quick, quickness, strong, tender, tenderness, warm, warm_up, warmer, warming, warmly, warmness
+
+The lexical forms of the source word 'Friendly': favorable, friend, friendliness, friendly, well-disposed
+
+warm (a) / definition match (warm%3:00:02::): psychologically warm; <<friendly>> and responsive (friendly%1:14:00::)
+warm_up (v) / definition match (warm_up%2:30:01::): become more <<friendly>> or open (friendly%1:14:00::)
+
+	quick (s) / example match (quick%5:00:00:fast:01): was quick to make <<friend>>s (friend%1:18:00::)
+
+⚫ Analysis: hot & sexy
+
+The lexical forms of the metaphor word 'hot': blistering, hot, hotness, live, raging, red-hot, spicy
+
+The lexical forms of the source word 'sexy': aphrodisiac, aphrodisiacal, sex, sexiness, sexy
+
+hot (s) / definition match (hot%5:00:00:sexy:00): <<sex>>ually excited or exciting (sex%1:14:00::)
+hotness (n) / definition match (hotness%1:26:00::): a state of <<sex>>ual arousal (sex%1:14:00::)
+red-hot (s) / definition match (red-hot%5:00:00:sexy:00): having strong <<sex>>ual appeal (sex%2:31:00::)
+spicy (s) / definition match (spicy%5:00:00:sexy:00): suggestive of <<sex>>ual impropriety (sex%1:14:00::)
+
+⚫ Analysis: motion & emotion
+
+The lexical forms of the metaphor word 'motion': apparent_motion, apparent_movement, gesticulate, gesticulation, gesture, motility, motion, motional, move, movement, question
+
+The lexical forms of the source word 'emotion': emote, emotion, emotional
+
+move (v) / definition match (move%2:37:00::): have an <<emotional>> or cognitive impact upon (emotional%3:00:02::)
+
+⚫ Analysis: death & end
+
+The lexical forms of the metaphor word 'death': Death, death, deathly, decease, demise, destruction, die, dying, end, expiry, last
+
+The lexical forms of the source word 'end': cease, close, closing, conclusion, death, destruction, die, end, ending, final_stage, finish, goal, last, oddment, remain, remainder, remnant, stop, terminal, terminate, termination, terminative, terminus
+
+etymology:
+expīrāre - to breathe out, blow out, exhale; to breathe one's last, die
+
+death (n) / definition match (death%1:19:00::): the permanent <<end>> of all life functions in an organism or part of an organism (end%2:42:01::)
+death (n) / definition match (death%1:28:00::): the time when something <<end>>s (end%1:28:00::)
+death (n) / definition match (death%1:28:01::): the time at which life <<end>>s; continuing until dead (end%1:28:00::)
+death (n) / example match (death%1:26:01::): he came to a bad <<end>> (end%1:09:02::)
+death (n) / example match (death%1:26:01::): the so-called glorious experiment came to an inglorious <<end>> (end%2:30:01::)
+death (n) / example match (death%1:28:01::): a struggle to the <<last>> (last%1:24:00::)
+demise (n) / definition match (demise%1:28:00::): the time when something <<end>>s (end%1:28:00::)
+destruction (n) / definition match (destruction%1:04:00::): the <<termination>> of something by causing so much damage to it that it cannot be repaired or no longer exists (termination%1:10:00::)
+destruction (n) / example match (destruction%1:26:00::): he came to a bad <<end>> (end%1:09:02::)
+destruction (n) / example match (destruction%1:26:00::): the so-called glorious experiment came to an inglorious <<end>> (end%2:30:01::)
+die (v) / definition match (die%2:30:01::): disappear or come to an <<end>> (end%2:30:01::)
+die (v) / definition match (die%2:30:04::): <<stop>> operating or functioning (stop%1:10:01::)
+die (v) / definition match (die%2:33:00::): to be on base at the <<end>> of an inning, of a player (end%1:09:02::)
+dying (n) / definition match (dying%1:28:00::): the time when something <<end>>s (end%1:28:00::)
+expiry (n) / definition match (expiry%1:28:00::): a coming to an <<end>> of a contract period (end%1:09:02::)
+
+last (n) / example match (last%1:28:01::): she stayed until his <<death>> (death%1:28:01::)
+last (s) / definition match (last%5:00:00:dying:00): occurring at the time of <<death>> (death%1:28:01::)
+
+	Death (n) / definition match (death%1:18:00::): the personification of <<death>> ()
+	death (n) / example match (death%1:04:00::): he had two <<death>>s on his conscience ()
+	death (n) / example match (death%1:11:00::): her <<death>> came as a terrible shock ()
+	death (n) / example match (death%1:11:00::): upon your de<<cease>> the capital will pass to your grandchildren (cease%1:28:00::)
+	death (n) / example match (death%1:19:00::): the animal <<die>>d a painful <<death>> (die%1:06:00::)
+	death (n) / example match (death%1:26:00::): he seemed more content in <<death>> than he had ever been in life (death%1:19:00::)
+	death (n) / example match (death%1:28:00::): it was the <<death>> of all his plans (death%1:19:00::)
+	death (n) / example match (death%1:28:01::): she stayed until his <<death>> (death%1:28:01::)
+	deathly (r) / definition match (deathly%4:02:00::): to a degree resembling <<death>> ()
+	deathly (r) / example match (deathly%4:02:00::): he was <<death>>ly pale ()
+	deathly (s) / definition match (deathly%5:00:00:dead:01): having the physical appearance of <<death>> ()
+	deathly (s) / definition match (deathly%5:00:00:fatal:00): causing or capable of causing <<death>> (death%1:11:00::)
+	deathly (s) / example match (deathly%5:00:00:dead:01): a <<death>>ly pallor ()
+	decease (n) / example match (decease%1:11:00::): her <<death>> came as a terrible shock ()
+	decease (n) / example match (decease%1:11:00::): upon your de<<cease>> the capital will pass to your grandchildren (cease%1:28:00::)
+	decease (v) / example match (decease%2:30:00::): She <<die>>d from cancer (die%2:30:00::)
+	demise (n) / example match (demise%1:28:00::): it was the <<death>> of all his plans (death%1:19:00::)
+	die (n) / definition match (die%1:06:02::): a cutting tool that is fitted into a <<die>>stock and used for cutting male (external) screw threads on screws or bolts or pipes or rods (die%1:06:02::)
+	die (v) / definition match (die%2:30:02::): suffer spiritual <<death>>; be damned (in the religious sense) (death%1:19:00::)
+	die (v) / definition match (die%2:35:00::): cut or shape with a <<die>> (die%2:35:00::)
+	die (v) / definition match (die%2:37:00::): be brought to or as if to the point of <<death>> by an intense emotion such as embarrassment, amusement, or shame (death%1:19:00::)
+	die (v) / definition match (die%2:39:00::): suffer or face the pain of <<death>> (death%1:11:00::)
+	die (v) / example match (die%2:30:00::): She <<die>>d from cancer (die%2:30:00::)
+	die (v) / example match (die%2:30:01::): My secret will <<die>> with me! (die%2:35:00::)
+	die (v) / example match (die%2:30:01::): Their anger <<die>>d (die%2:35:00::)
+	die (v) / example match (die%2:30:02::): Whosoever..believes in me shall never <<die>> (die%1:06:00::)
+	die (v) / example match (die%2:30:04::): The car <<die>>d on the road (die%1:06:00::)
+	die (v) / example match (die%2:37:00::): We almost <<die>>d laughing during the show (die%1:06:00::)
+	die (v) / example match (die%2:37:03::): She <<die>>d to worldly things and eventually entered a monastery (die%1:06:00::)
+	die (v) / example match (die%2:39:00::): Martyrs may <<die>> every day for their faith (die%1:06:01::)
+	dying (n) / example match (dying%1:28:00::): it was the <<death>> of all his plans (death%1:19:00::)
+	end (n) / definition match (end%1:09:02::): the state of affairs that a plan is int<<end>>ed to achieve and that (when achieved) <<terminate>>s behavior int<<end>>ed to achieve it (end%1:09:02::, terminate%2:42:05::, end%1:09:02::)
+	end (n) / definition match (end%1:10:00::): the <<last>> section of a communication (last%1:24:00::)
+	end (n) / definition match (end%1:18:00::): (football) the person who plays at one <<end>> of the line of scrimmage (end%1:18:00::)
+	end (n) / definition match (end%1:28:00::): the point in time at which something <<end>>s (end%1:28:00::)
+	end (n) / example match (end%1:04:00::): he held up his <<end>> (end%1:18:00::)
+	end (n) / example match (end%1:04:02::): no one wanted to play <<end>> (end%1:18:00::)
+	end (n) / example match (end%1:09:00::): Start at the beginning and go on until you come to the <<end>> (end%1:09:02::)
+	end (n) / example match (end%1:09:00::): we have given it at the <<end>> of the section since it involves the calculus (end%1:18:00::)
+	end (n) / example match (end%1:09:02::): the <<end>>s justify the means (end%1:18:00::)
+	end (n) / example match (end%1:10:00::): in <<conclusion>> I want to say... (conclusion%1:09:00::)
+	end (n) / example match (end%1:11:00::): I had to miss the <<last>> of the movie (last%1:24:00::)
+	end (n) / example match (end%1:11:00::): the <<end>> was exciting (end%1:18:00::)
+	end (n) / example match (end%1:15:00::): she knotted the <<end>> of the thread (end%1:18:00::)
+	end (n) / example match (end%1:15:00::): the <<end>> of the pier (end%1:18:00::)
+	end (n) / example match (end%1:15:00::): the <<terminal>>s of the anterior arches of the fornix (terminal%3:01:01::)
+	end (n) / example match (end%1:15:00::): they rode to the <<end>> of the line (end%1:18:00::)
+	end (n) / example match (end%1:15:01::): the <<end>> of town (end%1:18:00::)
+	end (n) / example match (end%1:15:02::): one <<end>> of the box was marked `This side up' (end%1:18:00::)
+	end (n) / example match (end%1:15:03::): both <<end>>s wrote at the same time (end%1:28:00::)
+	end (n) / example match (end%1:15:03::): the phone rang at the other <<end>> (end%1:18:00::)
+	end (n) / example match (end%1:18:00::): the <<end>> managed to hold onto the pass (end%1:09:02::)
+	end (n) / example match (end%1:26:00::): he came to a bad <<end>> (end%1:09:02::)
+	end (n) / example match (end%1:26:00::): the so-called glorious experiment came to an inglorious <<end>> (end%2:30:01::)
+	end (n) / example match (end%1:28:00::): the <<end>> of the year (end%1:18:00::)
+	end (n) / example match (end%1:28:00::): the <<ending>> of warranty period (ending%1:10:00::)
+	end (v) / definition match (end%2:30:01::): bring to an <<end>> or halt (end%2:30:01::)
+	end (v) / definition match (end%2:36:13::): put an <<end>> to (end%2:36:13::)
+	end (v) / definition match (end%2:42:00::): have an <<end>>, in a temporal, spatial, or quantitative sense; either spatial or metaphorical (end%2:42:00::)
+	end (v) / definition match (end%2:42:01::): be the <<end>> of; be the <<last>> or concluding part of (end%2:42:01::, last%1:11:00::)
+	end (v) / example match (end%2:30:01::): She <<end>>ed their fri<<end>>ship when she found out that he had once been convicted of a crime (end%1:06:02::, end%1:06:02::)
+	end (v) / example match (end%2:30:01::): The attack on Poland <<terminate>>d the relatively peaceful period after WW I (terminate%2:41:01::)
+	end (v) / example match (end%2:36:13::): The terrible news <<end>>ed our hopes that he had survived (end%1:15:00::)
+	end (v) / example match (end%2:42:00::): My property <<end>>s by the bushes (end%1:18:00::)
+	end (v) / example match (end%2:42:00::): The symphony <<end>>s in a pianissimo (end%2:42:00::)
+	end (v) / example match (end%2:42:00::): Your rights <<stop>> where you infringe upon the rights of other (stop%1:10:01::)
+	end (v) / example match (end%2:42:00::): the bronchioles <<terminate>> in a capillary bed (terminate%2:42:00::)
+	end (v) / example match (end%2:42:01::): This sad scene <<end>>ed the movie (end%1:18:00::)
+	expiry (n) / example match (expiry%1:11:00::): her <<death>> came as a terrible shock ()
+	expiry (n) / example match (expiry%1:11:00::): upon your de<<cease>> the capital will pass to your grandchildren (cease%1:28:00::)
+	last (a) / definition match (last%3:00:00::): coming after all others in time or space or degree or being the only one <<remain>>ing (remain%2:30:00::)
+	last (a) / example match (last%3:00:00::): down to his <<last>> nickel (last%1:24:00::)
+	last (a) / example match (last%3:00:00::): had the <<last>> word (last%1:24:00::)
+	last (a) / example match (last%3:00:00::): he raised his voice in a <<last>> supreme call (last%1:24:00::)
+	last (a) / example match (last%3:00:00::): the <<last>> day of the month (last%1:24:00::)
+	last (a) / example match (last%3:00:00::): the <<last>> game of the season (last%1:24:00::)
+	last (a) / example match (last%3:00:00::): the <<last>> time I saw Paris (last%1:28:00::)
+	last (a) / example match (last%3:00:00::): waited until the <<last>> minute (last%1:24:00::)
+	last (n) / definition match (last%1:24:00::): the <<last>> or lowest in an ordering or series (last%1:24:00::)
+	last (n) / definition match (last%1:28:00::): the temporal <<end>>; the concluding time (end%2:42:01::)
+	last (n) / definition match (last%1:28:01::): the time at which life <<end>>s; continuing until dead (end%1:28:00::)
+	last (n) / example match (last%1:04:00::): he breathed his <<last>> (last%1:24:00::)
+	last (n) / example match (last%1:11:00::): I had to miss the <<last>> of the movie (last%1:24:00::)
+	last (n) / example match (last%1:11:00::): the <<end>> was exciting (end%1:18:00::)
+	last (n) / example match (last%1:24:00::): he <<finish>>ed an inglorious <<last>> (finish%2:30:02::, last%1:24:00::)
+	last (n) / example match (last%1:24:00::): he was the <<last>> to leave (last%1:24:00::)
+	last (n) / example match (last%1:28:00::): the <<stop>>ping point of each round was signaled by a bell (stop%1:10:00::)
+	last (n) / example match (last%1:28:00::): the market was up at the <<finish>> (finish%2:34:00::)
+	last (n) / example match (last%1:28:00::): they were playing better at the <<close>> of the season (close%1:10:00::)
+	last (n) / example match (last%1:28:01::): a struggle to the <<last>> (last%1:24:00::)
+	last (r) / definition match (last%4:02:01::): the item at the <<end>> (end%1:18:00::)
+	last (r) / example match (last%4:02:00::): I saw him <<last>> in London (last%1:24:00::)
+	last (r) / example match (last%4:02:01::): <<last>>, I'll discuss family values (last%1:24:00::)
+	last (s) / definition match (last%5:00:00:closing:00): occurring at or forming an <<end>> or <<termination>> (end%2:30:01::, termination%1:28:00::)
+	last (s) / example match (last%5:00:00:closing:00): <<terminal>> leave (terminal%1:06:00::)
+	last (s) / example match (last%5:00:00:closing:00): the <<last>> days of the dinosaurs (last%1:24:00::)
+	last (s) / example match (last%5:00:00:dying:00): his <<last>> words (last%1:24:00::)
+	last (s) / example match (last%5:00:00:dying:00): the <<last>> rites (last%1:24:00::)
+	last (s) / example match (last%5:00:00:high:02): to the <<last>> measure of human <<end>>urance (last%1:24:00::, end%2:42:01::)
+	last (s) / example match (last%5:00:00:high:02): whether they were accomplices in the <<last>> degree or a lesser one was...to be determined individually (last%3:00:00::)
+	last (s) / example match (last%5:00:00:past:00): <<last>> Thursday (last%1:24:00::)
+	last (s) / example match (last%5:00:00:past:00): the <<last>> chapter we read (last%1:24:00::)
+	last (s) / example match (last%5:00:00:ultimate:00): a <<last>> resort (last%1:24:00::)
+	last (s) / example match (last%5:00:00:unalterable:00): the arbiter will have the <<last>> say (last%1:24:00::)
+	last (s) / example match (last%5:00:00:unlikely:00): the <<last>> man they would have chosen for the job (last%1:24:00::)
+	last (s) / example match (last%5:00:00:unlikely:00): the <<last>> person we would have suspected (last%1:24:00::)
+	last (s) / example match (last%5:00:00:worst:00): <<last>> prize (last%1:24:00::)
+	last (s) / example match (last%5:00:00:worst:00): in <<last>> place (last%1:24:00::)
+	last (v) / example match (last%2:42:00::): The bad weather <<last>>ed for three days (last%1:24:00::)
+	last (v) / example match (last%2:42:01::): how long can a person <<last>> without food and water? (last%1:04:00::)
